@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
-from App.controllers import login
+from App.controllers import login,initialize
 from App.models.Flights import Flight
 
 api_views = Blueprint('api_views',__name__, url_prefix='/api')
@@ -15,7 +15,11 @@ def login_function():
     data = request.json
     token = login(data.get("username"),data.get("password"))
     return jsonify({"message":f"Logged in!"}),200
-    
+
+@api_views.route('/init',methods=['GET'])
+def init():
+    initialize()
+    return jsonify("Database Initialized!"),200
 
 'User API Endpoints'
 @api_views.route('/users', methods=['GET'])
