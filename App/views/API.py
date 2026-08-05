@@ -14,8 +14,11 @@ def ping():
 def login_function():
     data = request.json
     token = login(data.get("username"),data.get("password"))
-    response = jsonify(access_token=token)
-    return response
+    if token:
+        response = jsonify(access_token=token)
+        return response
+    else:
+        return jsonify({"error":f"Bad Credentials!"}),401
 
 @api_views.route('/init',methods=['GET'])
 def init():
