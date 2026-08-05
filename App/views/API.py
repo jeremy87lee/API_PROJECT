@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
-from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users
 from App.controllers import login
 
@@ -9,14 +9,12 @@ api_views = Blueprint('api_views',__name__, url_prefix='/api')
 def ping():
     return jsonify({'message': 'pong'}), 200
 
-@api_views.route('/login',methods=['GET'])
+@api_views.route('/login',methods=['POST'])
 def login_function():
     data = request.json
     token = login(data.get("username"),data.get("password"))
-    if token:
-        return jsonify({"message":f"Logged in!"}),200
-    else:
-        return jsonify({"message":f"Could not log in!"}),400
+    return jsonify({"message":f"Logged in!"}),200
+    
 
 'User API Endpoints'
 @api_views.route('/users', methods=['GET'])
