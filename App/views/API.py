@@ -18,7 +18,7 @@ def login_function():
         response = jsonify(access_token=token)
         return response
     else:
-        return jsonify({"error":f"Bad Credentials!"}),401
+        return jsonify({"message":f"Bad Credentials!"}),401
 
 @api_views.route('/init',methods=['GET'])
 def init():
@@ -36,11 +36,11 @@ def get_users():
 def create_general_user():
     data = request.json
     if data.get("username") is None or data.get("password") is None or data.get("is_admin") is None:
-        return jsonify({"message":f"Missing credentials!"}),401
+        return jsonify({"message":f"Missing credentials!"}),400
     users = get_all_users()
     for u in users:
         if u.username == data.get("username"):
-            return jsonify({"message":f"Username already taken!"}),401
+            return jsonify({"message":f"Username already taken!"}),409
     user = create_user(data.get("username"),data.get("password"),data.get("is_admin"))
     if user:
         return jsonify({"message":f"User created!"}),201
@@ -64,7 +64,7 @@ def create_flight_function():
     new_flight = create_Flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("arrival_destination"))
     if new_flight:
         return jsonify({"message":f"Flight created!"}),201
-    return jsonify({"message":f"Flight could not be created!"}),400
+    return jsonify({"message":f"Flight could not be created!"}),404
 
 @api_views.route('/update_flight/<int:flight_id>',methods=['PUT'])
 @jwt_required()
@@ -73,8 +73,10 @@ def update_flight_function(flight_id):
         return jsonify({"message" : f"Only admins can update flights!"}),401
     flight = Flight.query.get(flight_id)
     if not flight:
-        return jsonify({"message":f"Flight not found!"}),400
+        return jsonify({"message":f"Flight not found!"}),404
     data = request.json
+    if data.get("departure_time") is None or data.get("arrival_time") is None or data.get("plane_id") is None or data.get("pilot_id") is None or data.get("departure_destination") is None or data.get("destination") is None:
+        return jsonify({"message":f"Missing flight data! Could not update!"}),400
     update = update_flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("destination"),flight_id)
     if not update:
         return jsonify({"message":f"Flight could not be updated!"}),400
@@ -87,7 +89,7 @@ def delete_flight_function(flight_id):
         return jsonify({"message":f"Only admins can delete flights!"}),401
     flight = Flight.query.get(flight_id)
     if not flight:
-        return jsonify({"message":f"Flight number {flight_id} could not be found!"}),400
+        return jsonify({"message":f"Flight number {flight_id} could not be found!"}),404
     deletion = delete_flight(flight_id)
     if not deletion:
         return jsonify({"message":f"Flight number {flight_id} could not be deleted!"}),400
