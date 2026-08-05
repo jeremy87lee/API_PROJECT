@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
-from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight
+from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers import login
 from App.models.Flights import Flight
 
@@ -72,3 +72,15 @@ def update_flight_function(flight_id):
         return jsonify({"message":f"Flight could not be updated!"}),400
     return jsonify({"message":f"Flight updated!"}),200
 
+@api_views.route('/delete_flight/<int:flight_id>',methods=['DELETE'])
+@jwt_required()
+def delete_flight_function(flight_id):
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can delete flights!"}),401
+    flight = Flight.query.get(flight_id)
+    if not flight:
+        return jsonify({"message":f"Flight number {flight_id} could not be found!"}),400
+    deletion = delete_flight(flight_id)
+    if not deletion:
+        return jsonify({"message":f"Flight number {flight_id} could not be deleted!"}),400
+    return jsonify({"message":f"Flight number {flight_id} deleted!"})
