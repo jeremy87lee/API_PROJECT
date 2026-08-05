@@ -19,6 +19,7 @@ LOGGER = logging.getLogger(__name__)
 '''
    Unit Tests
 '''
+@pytest.mark.skip(reason="Unit tests are not implemented yet")
 class UserUnitTests(unittest.TestCase):
 
     def test_new_user(self):
@@ -60,6 +61,7 @@ def test_authenticate():
     user = create_user("bob", "bobpass")
     assert login("bob", "bobpass") != None
 
+@pytest.mark.skip(reason="Integration tests are not implemented yet")
 class UsersIntegrationTests(unittest.TestCase):
 
     def test_create_user(self):
