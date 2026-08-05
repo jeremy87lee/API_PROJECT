@@ -14,7 +14,8 @@ def ping():
 def login_function():
     data = request.json
     token = login(data.get("username"),data.get("password"))
-    return jsonify({"message":f"Logged in!"}),200
+    response = jsonify(access_token=token)
+    return response
 
 @api_views.route('/init',methods=['GET'])
 def init():
