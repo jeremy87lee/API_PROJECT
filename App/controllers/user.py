@@ -207,6 +207,46 @@ def update_pilot(pilot_id,name):
         return True
     return False
 
+def update_flight(departure_time, arrival_time, plane_id, pilot_id, departure_destination, destination, flight_id):
+    flight = Flight.query.get(flight_id)
+    if not flight:
+        print(f"Flight ID {flight_id} does not exist.")
+        return False  # Flight ID does not exist
+
+    plane_id = int(plane_id)
+    pilot_id = int(pilot_id)
+    plane = Plane.query.get(plane_id)
+    if not plane:
+        print(f"Plane ID {plane_id} does not exist.")
+        return False  # Plane ID does not exist
+    pilot = Pilot.query.get(pilot_id)
+    if not pilot:
+        print(f"Pilot ID {pilot_id} does not exist.")
+        return False  # Pilot ID does not exist
+
+    if departure_time >= arrival_time:
+        print("Departure time must be before arrival time.")
+        return False  # Invalid time range
+
+    Flights = Flight.query.all()
+    for f in Flights:
+        if f.id != flight_id:  # Exclude the current flight from the check
+            if (departure_time < f.arrival_time and arrival_time > f.departure_time) and pilot_id == f.pilot_id:
+                print(f"Pilot {pilot_id} already has another flight at that time!")
+                return False
+            if (departure_time < f.arrival_time and arrival_time > f.departure_time) and plane_id == f.plane_id:
+                print(f"Plane {plane_id} already has another flight at that time!")
+                return False
+
+    flight.departure_time = departure_time
+    flight.arrival_time = arrival_time
+    flight.plane_id = plane_id
+    flight.pilot_id = pilot_id
+    flight.departure_destination = departure_destination
+    flight.destination = destination
+    db.session.commit()
+    return True
+
 #Code to delete gate, plane, and pilot information from the database
 def delete_gate(gate_id):
     gate = Gate.query.get(gate_id)  

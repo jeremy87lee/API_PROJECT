@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
-from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users
+from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight
 from App.controllers import login
+from App.models.Flights import Flight
 
 api_views = Blueprint('api_views',__name__, url_prefix='/api')
 
@@ -47,6 +48,8 @@ def get_flights():
 @api_views.route('/create_flight',methods=['POST'])
 @jwt_required()
 def create_flight_function():
+    if not jwt_current_user.is_admin:
+        return jsonify({"message" : f"Only admins can create flights!"}),401
     data = request.json
     if data.get("departure_time") is None or data.get("arrival_time") is None or data.get("plane_id") is None or data.get("pilot_id") is None or data.get("departure_destination") is None or data.get("arrival_destination") is None:
         return jsonify({"message" : f"Missing flight data! Could not be created!"}),400
@@ -54,3 +57,18 @@ def create_flight_function():
     if new_flight:
         return jsonify({"message":f"Flight created!"}),201
     return jsonify({"message":f"Flight could not be created!"}),400
+
+@api_views.route('/update_flight/<int:flight_id>',methods=['PUT'])
+@jwt_required()
+def update_flight_function(flight_id):
+    if not jwt_current_user.is_admin:
+        return jsonify({"message" : f"Only admins can update flights!"}),401
+    flight = Flight.query.get(flight_id)
+    if not flight:
+        return jsonify({"message":f"Flight not found!"}),400
+    data = request.json
+    update = update_flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("destination"),flight_id)
+    if not update:
+        return jsonify({"message":f"Flight could not be updated!"}),400
+    return jsonify({"message":f"Flight updated!"}),200
+
