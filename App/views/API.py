@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
-from App.controllers.user import get_all_planes_json, create_Plane
+from App.controllers.user import get_all_planes_json, create_Plane, update_plane
 from App.controllers import login,initialize
-from App.models.Flights import Flight
+from App.models.Flights import Flight,Plane
 
 api_views = Blueprint('api_views',__name__, url_prefix='/api')
 
@@ -107,6 +107,8 @@ def display_planes():
 @api_views.route('/create_plane',methods=['POST'])
 @jwt_required()
 def create_plane_function():
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can create planes!"}),401
     data = request.json
     if not data.get("model") or not data.get("capacity"):
         return jsonify({"message":f"Model or Capacity info missing!"}),400
@@ -114,3 +116,19 @@ def create_plane_function():
     if not new_plane:
         return jsonify({"message":f"Plane could not be created!"}),400
     return jsonify({"message":f"Plane created!"}),201
+
+@api_views.route('/update_plane/<int:plane_id>',methods=['PUT'])
+@jwt_required()
+def update_plane_function(plane_id):
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can update planes!"}),401
+    plane = Plane.query.get(plane_id)
+    if not plane:
+        return jsonify({"message":f"Plane number {plane_id} not found!"}),400
+    data = request.json
+    if not data.get("model") or not data.get("capacity"):
+        return jsonify({"message":f"Model or Capacity info missing!"}),400
+    new_plane = update_plane(plane_id,data.get("model"),data.get("capacity"))
+    if not new_plane:
+        return jsonify({"message":f"Plane could not be updated!"}),400
+    return jsonify({"message":f"Plane updated!"}),201
