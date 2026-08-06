@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
-from App.controllers.user import get_all_planes_json
+from App.controllers.user import get_all_planes_json, create_Plane
 from App.controllers import login,initialize
 from App.models.Flights import Flight
 
@@ -103,3 +103,14 @@ def delete_flight_function(flight_id):
 def display_planes():
     planes = get_all_planes_json()
     return jsonify(planes),200
+
+@api_views.route('/create_plane',methods=['POST'])
+@jwt_required()
+def create_plane_function():
+    data = request.json
+    if not data.get("model") or not data.get("capacity"):
+        return jsonify({"message":f"Model or Capacity info missing!"}),400
+    new_plane = create_Plane(data.get("model"),data.get("capacity"))
+    if not new_plane:
+        return jsonify({"message":f"Plane could not be created!"}),400
+    return jsonify({"message":f"Plane created!"}),201
