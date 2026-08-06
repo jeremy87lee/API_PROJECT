@@ -17,6 +17,7 @@ def login_function():
     token = login(data.get("username"),data.get("password"))
     if token:
         response = jsonify(access_token=token)
+        set_access_cookies(response, token)
         return response
     else:
         return jsonify({"message":f"Bad Credentials!"}),401
