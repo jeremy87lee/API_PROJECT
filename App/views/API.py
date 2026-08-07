@@ -2,9 +2,9 @@ from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
-from App.controllers.user import get_all_pilots_json
+from App.controllers.user import get_all_pilots_json, create_Pilot
 from App.controllers import login,initialize
-from App.models.Flights import Flight,Plane
+from App.models.Flights import Flight,Plane,Pilot
 
 api_views = Blueprint('api_views',__name__, url_prefix='/api')
 
@@ -152,3 +152,16 @@ def delete_plane_function(plane_id):
 def display_pilots():
     pilots = get_all_pilots_json()
     return jsonify(pilots)
+
+@api_views.route('/create_pilot',methods=['POST'])
+@jwt_required()
+def create_pilot_function():
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can create pilots!"}),401
+    data = request.json
+    if not data.get("name"):
+        return jsonify({"message":f"Name not given!"}),400
+    new_pilot = create_Pilot(data.get("name"))
+    if not new_pilot:
+        return jsonify({"message":f"Pilot could not be created!"}),400
+    return jsonify({"message":f"Pilot created!"}),201
