@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
-from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot
+from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot, delete_pilot
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane,Pilot
 
@@ -181,3 +181,16 @@ def update_pilot_function(pilot_id):
     if not new_pilot:
         return jsonify({"message":f"Pilot could not be updated!"}),400
     return jsonify({"message":f"Pilot {pilot_id} updated!"}),201
+
+@api_views.route('/delete_pilot/<int:pilot_id>',methods=['DELETE'])
+@jwt_required()
+def delete_pilot_function(pilot_id):
+    if not jwt_current_user.is_admin:
+            return jsonify({"message":f"Only admins can delete pilots!"}),401
+    pilot = Pilot.query.get(pilot_id)
+    if not pilot:
+        return jsonify({"message":f"Pilot number {pilot_id} not found!"}),404
+    deletion = delete_pilot(pilot_id)
+    if not deletion:
+        return jsonify({"message":f"Pilot number {pilot_id} not deleted!"}),400
+    return jsonify({"message":f"Pilot {pilot_id} deleted!"}),200
