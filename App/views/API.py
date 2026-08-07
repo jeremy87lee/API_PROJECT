@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, current_user as jwt_current_user, s
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
 from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot, delete_pilot
-from App.controllers.user import get_all_gates_json
+from App.controllers.user import get_all_gates_json, create_Gate
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane,Pilot
 from App.models.Gates import Gate
@@ -204,3 +204,16 @@ def delete_pilot_function(pilot_id):
 def display_gates():
     gates = get_all_gates_json()
     return jsonify(gates)
+
+@api_views.route('/create_gate',methods=['POST'])
+@jwt_required()
+def create_gate_function():
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can create gates!"}),401
+    data = request.json
+    if not data.get("terminal") or not data.get("flight_id"):
+        return jsonify({"message":f"Missing terminal or flight id!"}),400
+    new_gate = create_Gate(data.get("terminal"),data.get("flight_id"))
+    if not new_gate:
+        return jsonify({"message":f"Gate could not be created!"}),400
+    return jsonify({"message":f"Gate created!"}),201
