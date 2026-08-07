@@ -3,8 +3,10 @@ from flask_jwt_extended import jwt_required, current_user as jwt_current_user, s
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
 from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot, delete_pilot
+from App.controllers.user import get_all_gates_json
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane,Pilot
+from App.models.Gates import Gate
 
 api_views = Blueprint('api_views',__name__, url_prefix='/api')
 
@@ -147,6 +149,7 @@ def delete_plane_function(plane_id):
         return jsonify({"message":f"Plane number {plane_id} not deleted!"}),400
     return jsonify({"message":f"Plane {plane_id} deleted!"}),200
 
+'Pilot Endpoints'
 @api_views.route('/pilots',methods=['GET'])
 @jwt_required()
 def display_pilots():
@@ -194,3 +197,10 @@ def delete_pilot_function(pilot_id):
     if not deletion:
         return jsonify({"message":f"Pilot number {pilot_id} not deleted!"}),400
     return jsonify({"message":f"Pilot {pilot_id} deleted!"}),200
+
+'Gate Endpoints'
+@api_views.route('/gates',methods=['GET'])
+@jwt_required()
+def display_gates():
+    gates = get_all_gates_json()
+    return jsonify(gates)
