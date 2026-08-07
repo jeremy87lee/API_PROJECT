@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user, set_access_cookies
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
-from App.controllers.user import get_all_planes_json, create_Plane, update_plane
+from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane
 
@@ -82,7 +82,7 @@ def update_flight_function(flight_id):
     update = update_flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("destination"),flight_id)
     if not update:
         return jsonify({"message":f"Flight could not be updated!"}),400
-    return jsonify({"message":f"Flight updated!"}),200
+    return jsonify({"message":f"Flight {flight_id} updated!"}),200
 
 @api_views.route('/delete_flight/<int:flight_id>',methods=['DELETE'])
 @jwt_required()
@@ -95,7 +95,7 @@ def delete_flight_function(flight_id):
     deletion = delete_flight(flight_id)
     if not deletion:
         return jsonify({"message":f"Flight number {flight_id} could not be deleted!"}),400
-    return jsonify({"message":f"Flight number {flight_id} deleted!"})
+    return jsonify({"message":f"Flight number {flight_id} deleted!"}),200
 
 'Plane Endpoints'
 @api_views.route('/planes',methods=['GET'])
@@ -124,11 +124,24 @@ def update_plane_function(plane_id):
         return jsonify({"message":f"Only admins can update planes!"}),401
     plane = Plane.query.get(plane_id)
     if not plane:
-        return jsonify({"message":f"Plane number {plane_id} not found!"}),400
+        return jsonify({"message":f"Plane number {plane_id} not found!"}),404
     data = request.json
     if not data.get("model") or not data.get("capacity"):
         return jsonify({"message":f"Model or Capacity info missing!"}),400
     new_plane = update_plane(plane_id,data.get("model"),data.get("capacity"))
     if not new_plane:
         return jsonify({"message":f"Plane could not be updated!"}),400
-    return jsonify({"message":f"Plane updated!"}),201
+    return jsonify({"message":f"Plane {plane_id} updated!"}),201
+
+@api_views.route('/delete_plane/<int:plane_id>',methods=['DELETE'])
+@jwt_required()
+def delete_plane_function(plane_id):
+    if not jwt_current_user.is_admin:
+            return jsonify({"message":f"Only admins can delete planes!"}),401
+    plane = Plane.query.get(plane_id)
+    if not plane:
+        return jsonify({"message":f"Plane number {plane_id} not found!"}),404
+    deletion = delete_plane(plane_id)
+    if not deletion:
+        return jsonify({"message":f"Plane number {plane_id} not deleted!"}),400
+    return jsonify({"message":f"Plane {plane_id} deleted!"}),200
