@@ -12,7 +12,7 @@ api_views = Blueprint('api_views',__name__, url_prefix='/api')
 
 @api_views.route('/ping',methods=['GET'])
 def ping():
-    return jsonify({'message': 'pong'}), 200
+    return jsonify({"message":f"pong"}), 200
 
 @api_views.route('/login',methods=['POST'])
 def login_function():
@@ -28,7 +28,7 @@ def login_function():
 @api_views.route('/init',methods=['GET'])
 def init():
     initialize()
-    return jsonify("Database Initialized!"),200
+    return jsonify({"message":f"Database Initialized!"}),200
 
 'User API Endpoints'
 @api_views.route('/users', methods=['GET'])
