@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, current_user as jwt_current_user, s
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
 from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot, delete_pilot
-from App.controllers.user import get_all_gates_json, create_Gate
+from App.controllers.user import get_all_gates_json, create_Gate, update_gate
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane,Pilot
 from App.models.Gates import Gate
@@ -217,3 +217,16 @@ def create_gate_function():
     if not new_gate:
         return jsonify({"message":f"Gate could not be created!"}),400
     return jsonify({"message":f"Gate created!"}),201
+
+@api_views.route('/update_gate/<int:gate_id>',methods=['PUT'])
+@jwt_required()
+def update_gate_function(gate_id):
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can create gates!"}),401
+    data = request.json
+    if not data.get("terminal") or not data.get("flight_id"):
+        return jsonify({"message":f"Missing terminal or flight id!"}),400
+    update = update_gate(gate_id,data.get("terminal"),data.get("flight_id"))
+    if not update:
+        return jsonify({"message":f"Gate {gate_id} could not be updated!"}),400
+    return jsonify({"message":f"Gate {gate_id} updated!"}),200
