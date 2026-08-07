@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, current_user as jwt_current_user, s
 from App.controllers.user import get_all_users_json,create_user,get_all_flights_json,create_Flight,get_all_users,update_flight,delete_flight
 from App.controllers.user import get_all_planes_json, create_Plane, update_plane, delete_plane
 from App.controllers.user import get_all_pilots_json, create_Pilot, update_pilot, delete_pilot
-from App.controllers.user import get_all_gates_json, create_Gate, update_gate
+from App.controllers.user import get_all_gates_json, create_Gate, update_gate, delete_gate
 from App.controllers import login,initialize
 from App.models.Flights import Flight,Plane,Pilot
 from App.models.Gates import Gate
@@ -230,3 +230,13 @@ def update_gate_function(gate_id):
     if not update:
         return jsonify({"message":f"Gate {gate_id} could not be updated!"}),400
     return jsonify({"message":f"Gate {gate_id} updated!"}),200
+
+@api_views.route('/delete_gate/<int:gate_id>',methods=['DELETE'])
+@jwt_required()
+def delete_gate_function(gate_id):
+    if not jwt_current_user.is_admin:
+        return jsonify({"message":f"Only admins can create gates!"}),401
+    deletion = delete_gate(gate_id)
+    if not deletion:
+        return jsonify({"message":f"Gate {gate_id} could not be deleted!"}),400
+    return jsonify({"message":f"Gate {gate_id} deleted!"}),200
