@@ -64,7 +64,7 @@ def create_flight_function():
     if not jwt_current_user.is_admin:
         return jsonify({"message" : f"Only admins can create flights!"}),401
     data = request.json
-    if data.get("departure_time") is None or data.get("arrival_time") is None or data.get("plane_id") is None or data.get("pilot_id") is None or data.get("departure_destination") is None or data.get("arrival_destination") is None:
+    if not data.get("departure_time")  or not data.get("arrival_time") or not data.get("plane_id") or not data.get("pilot_id") or not data.get("departure_destination") or not data.get("arrival_destination"):
         return jsonify({"message" : f"Missing flight data! Could not be created!"}),400
     new_flight = create_Flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("arrival_destination"))
     if new_flight:
@@ -80,7 +80,7 @@ def update_flight_function(flight_id):
     if not flight:
         return jsonify({"message":f"Flight not found!"}),404
     data = request.json
-    if data.get("departure_time") is None or data.get("arrival_time") is None or data.get("plane_id") is None or data.get("pilot_id") is None or data.get("departure_destination") is None or data.get("destination") is None:
+    if not data.get("departure_time") or not data.get("arrival_time") or not data.get("plane_id") or not data.get("pilot_id") or not data.get("departure_destination") or not data.get("destination"):
         return jsonify({"message":f"Missing flight data! Could not update!"}),400
     update = update_flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("destination"),flight_id)
     if not update:
