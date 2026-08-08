@@ -134,7 +134,7 @@ def update_plane_function(plane_id):
     new_plane = update_plane(plane_id,data.get("model"),data.get("capacity"))
     if not new_plane:
         return jsonify({"message":f"Plane could not be updated!"}),400
-    return jsonify({"message":f"Plane {plane_id} updated!"}),201
+    return jsonify({"message":f"Plane {plane_id} updated!"}),200
 
 @api_views.route('/delete_plane/<int:plane_id>',methods=['DELETE'])
 @jwt_required()
