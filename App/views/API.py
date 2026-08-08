@@ -236,6 +236,9 @@ def update_gate_function(gate_id):
 def delete_gate_function(gate_id):
     if not jwt_current_user.is_admin:
         return jsonify({"message":f"Only admins can create gates!"}),401
+    gate = Gate.query.get(gate_id)
+    if not gate:
+        return jsonify({"message":f"Gate {gate_id} not found!"}),404
     deletion = delete_gate(gate_id)
     if not deletion:
         return jsonify({"message":f"Gate {gate_id} could not be deleted!"}),400
