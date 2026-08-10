@@ -113,9 +113,28 @@ def create_Flight(departure_time, arrival_time, plane_id, pilot_id, departure_de
     db.session.commit()
     return new_flight
 
-def get_all_flights_json():
-    flights = Flight.query.all()
-    return [flight.get_json() for flight in flights]
+def get_all_flights_json(page,per_page,destination=None,sort=None):
+    query = Flight.query
+    #filtering
+    if destination:
+        query = Flight.query.filter_by(destination=destination)
+    
+    #sort
+    if sort:
+        descending = sort.startswith('-')
+        field_name = sort.lstrip('-')
+        if hasattr(Flight,field_name):
+            column = getattr(Flight,field_name)
+            query = query.order_by(column.desc() if descending else column.asc())
+        
+    paginated = query.paginate(page=page,per_page=per_page,error_out=False)
+    return {
+        "data": [flights.get_json() for flights in paginated.items],
+        "page":paginated.page,
+        "per_page":paginated.per_page,
+        "total":paginated.total,
+        "total_pages":paginated.pages
+    }
 
 def get_all_gates_json():
     gates = Gate.query.all()
