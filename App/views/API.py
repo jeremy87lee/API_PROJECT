@@ -108,7 +108,11 @@ def delete_flight_function(flight_id):
 @api_views.route('/planes',methods=['GET'])
 @jwt_required()
 def display_planes():
-    planes = get_all_planes_json()
+    page = request.args.get("page",type=int)
+    per_page = request.args.get("per_page",type=int)
+    model = request.args.get("model",None)
+    sort = request.args.get("sort",None)
+    planes = get_all_planes_json(page=page,per_page=per_page,model=model,sort=sort)
     return jsonify(planes),200
 
 @api_views.route('/create_plane',methods=['POST'])

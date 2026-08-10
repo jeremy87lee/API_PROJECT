@@ -140,9 +140,30 @@ def get_all_gates_json():
     gates = Gate.query.all()
     return [gate.get_json() for gate in gates]
 
-def get_all_planes_json():
-    planes = Plane.query.all()
-    return [plane.get_json() for plane in planes]
+def get_all_planes_json(page,per_page,model=None,sort=None):
+    query = Plane.query
+
+    #filtering
+    if model:
+        query = query.filter_by(model=model)
+    
+    #sorting
+    if sort:
+        descending = sort.startswith('-')
+        field_name = sort.lstrip('-')
+        if hasattr(Plane,field_name):
+            column = getattr(Plane,field_name)
+            query = query.order_by(column.desc() if descending else column.asc())
+    
+    #pagination
+    paginated = query.paginate(page=page,per_page=per_page,error_out=False)
+    return {
+        "data": [plane.get_json() for plane in paginated.items],
+        "page": paginated.page,
+        "per_page": paginated.per_page,
+        "total": paginated.total,
+        "total_pages":paginated.pages
+    }
 
 def get_all_pilots_json():
     pilots = Pilot.query.all()
