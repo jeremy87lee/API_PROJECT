@@ -213,7 +213,10 @@ def delete_pilot_function(pilot_id):
 @api_views.route('/gates',methods=['GET'])
 @jwt_required()
 def display_gates():
-    gates = get_all_gates_json()
+    page = request.args.get("page",type=int)
+    per_page = request.args.get("per_page",type=int)
+    sort = request.args.get("Sort",None)
+    gates = get_all_gates_json(page=page,per_page=per_page,sort=sort)
     return jsonify(gates)
 
 @api_views.route('/create_gate',methods=['POST'])

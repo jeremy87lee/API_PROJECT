@@ -136,10 +136,27 @@ def get_all_flights_json(page,per_page,destination=None,sort=None):
         "total_pages":paginated.pages
     }
 
-def get_all_gates_json():
-    gates = Gate.query.all()
-    return [gate.get_json() for gate in gates]
-
+def get_all_gates_json(page,per_page,sort=None):
+    query = Gate.query
+    
+    #sorting
+    if sort:
+        descending = sort.startswith('-')
+        field_name = sort.lstrip('-')
+        if hasattr(Gate,field_name):
+            column = getattr(Gate,field_name)
+            query = query.order_by(column.desc() if descending else column.asc())
+    
+    #pagination:
+    paginated = query.paginate(page=page,per_page=per_page,error_out=False)
+    return {
+        "data": [gate.get_json() for gate in paginated.items],
+        "page": paginated.page,
+        "per_page": paginated.per_page,
+        "total": paginated.total,
+        "total_pages":paginated.pages
+    }
+    
 def get_all_planes_json(page,per_page,model=None,sort=None):
     query = Plane.query
 
