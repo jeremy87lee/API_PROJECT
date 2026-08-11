@@ -165,9 +165,26 @@ def get_all_planes_json(page,per_page,model=None,sort=None):
         "total_pages":paginated.pages
     }
 
-def get_all_pilots_json():
-    pilots = Pilot.query.all()
-    return [pilot.get_json() for pilot in pilots]
+def get_all_pilots_json(page,per_page,sort=None):
+    query = Pilot.query
+    
+    #sorting
+    if sort:
+        descending = sort.startswith('-')
+        field_name = sort.lstrip('-')
+        if hasattr(Pilot,field_name):
+            column = getattr(Pilot,field_name)
+            query = query.order_by(column.desc() if descending else column.asc())
+    
+    #pagination
+    paginated = query.paginate(page=page,per_page=per_page,error_out=False)
+    return {
+        "data":[pilot.get_json() for pilot in paginated.items],
+        "page":paginated.page,
+        "per_page":paginated.per_page,
+        "total":paginated.total,
+        "total_pages":paginated.pages
+    }
 
 def get_all_admins_json():
     admins = Admin.query.all()
