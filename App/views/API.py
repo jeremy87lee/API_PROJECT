@@ -73,7 +73,7 @@ def create_flight_function():
     new_flight = create_Flight(data.get("departure_time"),data.get("arrival_time"),data.get("plane_id"),data.get("pilot_id"),data.get("departure_destination"),data.get("arrival_destination"))
     if new_flight:
         return jsonify({"message":f"Flight created!"}),201
-    return jsonify({"message":f"Flight could not be created!"}),404
+    return jsonify({"message":f"Flight could not be created!"}),400
 
 @api_views.route('/update_flight/<int:flight_id>',methods=['PUT'])
 @jwt_required()

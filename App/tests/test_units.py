@@ -389,7 +389,7 @@ def test_create_flight_time_clash_with_pilot(empty_db):
             "departure_destination": "Paris",
             "arrival_destination": "Texas"
         })
-    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.status_code == 400 
     assert response.get_json().get("message") == "Flight could not be created!"
 
 def test_create_flight_time_clash_with_plane(empty_db):
@@ -406,7 +406,7 @@ def test_create_flight_time_clash_with_plane(empty_db):
             "departure_destination": "Paris",
             "arrival_destination": "Texas"
         })
-    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.status_code == 400
     assert response.get_json().get("message") == "Flight could not be created!"
 
 def test_create_flight_pilot_not_found(empty_db):
@@ -418,7 +418,7 @@ def test_create_flight_pilot_not_found(empty_db):
         "departure_destination": "Paris",
         "arrival_destination": "Texas"
     })
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.get_json().get("message") == "Flight could not be created!"
 
 def test_create_flight_plane_not_found(empty_db):
@@ -430,7 +430,7 @@ def test_create_flight_plane_not_found(empty_db):
         "departure_destination": "Paris",
         "arrival_destination": "Texas"
     })
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.get_json().get("message") == "Flight could not be created!"
 
 def test_create_flight_departureTime_later_than_arrivalTime(empty_db):
@@ -442,7 +442,7 @@ def test_create_flight_departureTime_later_than_arrivalTime(empty_db):
             "departure_destination": "Paris",
             "arrival_destination": "Texas"
         })
-    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.status_code == 400
     assert response.get_json().get("message") == "Flight could not be created!"
 
 def test_update_flight(empty_db):
