@@ -558,3 +558,39 @@ def test_update_flight_departureTime_later_than_arrivalTime(empty_db):
         })
     assert response.status_code == 400
     assert response.get_json().get("message") == "Flight could not be updated!"
+
+def test_update_flight_not_found(empty_db):
+    response = empty_db.put("/api/update_flight/3",json={
+                "departure_time": "2026-08-11 15:00:00",
+                "arrival_time": "2026-08-11 14:00:00",
+                "pilot_id": 3,
+                "plane_id": 3,
+                "departure_destination": "Paris",
+                "destination": "Texas"
+            })
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Flight not found!"
+
+def test_delete_flight(empty_db):
+    response = empty_db.delete("/api/delete_flight/1")
+    assert response.status_code == 200
+    assert response.get_json().get("message") == "Flight number 1 deleted!"
+
+def test_delete_flight_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    response = empty_db.delete("/api/delete_flight/2")
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can delete flights!"
+
+def test_delete_flight_not_found(empty_db):
+    empty_db.post("/api/login",json={
+            "username": "admin",
+            "password": "adminpass"
+        })
+    response = empty_db.delete("/api/delete_flight/3")
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Flight number 3 could not be found!"
+    
