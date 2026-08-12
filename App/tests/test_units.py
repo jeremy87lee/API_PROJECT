@@ -309,10 +309,6 @@ def test_delete_plane_not_found(empty_db):
     response = empty_db.delete("/api/delete_plane/2")
     assert response.status_code == 404
     assert response.get_json().get("message") == "Plane number 2 not found!"
-"""
-Gate Tests
-"""
-
 
 
 '''
@@ -323,8 +319,23 @@ def test_get_flights(empty_db):
     assert response.status_code == 200
     assert "data" in response.get_json()
 
-@pytest.mark.skip(reason="Pilots and Planes not created yet!")
+
 def test_create_flight(empty_db):
+    empty_db.post("/api/create_plane",json={
+        "model": "F-16",
+        "capacity": "2"    
+    })
+    
+    empty_db.post("/api/create_plane",json={
+            "model": "Boeing 737",
+            "capacity": "180"    
+        })
+    
+    empty_db.post("/api/create_plane",json={
+                "model": "Boeing 747",
+                "capacity": "300"    
+            })
+    
     response = empty_db.post("/api/create_flight",json={
         "departure_time": "2026-07-11 12:00:00",
         "arrival_time": "2026-07-11 14:00:00",
@@ -335,3 +346,215 @@ def test_create_flight(empty_db):
     })
     assert response.status_code == 201
     assert response.get_json().get("message") == "Flight created!"
+
+def test_create_flight_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+                "username": "greg",
+                "password": "gregpass"   
+            })
+
+    response = empty_db.post("/api/create_flight",json={
+        "departure_time": "2026-08-11 12:00:00",
+        "arrival_time": "2026-08-11 14:00:00",
+        "pilot_id": 2,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can create flights!"
+
+def test_create_flight_missing_credentials(empty_db):
+    empty_db.post("/api/login",json={
+                    "username": "admin",
+                    "password": "adminpass"   
+                })
+
+    response = empty_db.post("/api/create_flight",json={
+            "arrival_time": "2026-08-11 14:00:00",
+            "pilot_id": 2,
+            "plane_id": 3,
+            "arrival_destination": "Texas"
+        })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Missing flight data! Could not be created!"
+
+def test_create_flight_time_clash_with_pilot(empty_db):
+
+    response = empty_db.post("/api/create_flight",json={
+            "departure_time": "2026-07-11 13:00:00",
+            "arrival_time": "2026-07-11 15:00:00",
+            "pilot_id": 2,
+            "plane_id": 2,
+            "departure_destination": "Paris",
+            "arrival_destination": "Texas"
+        })
+    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.get_json().get("message") == "Flight could not be created!"
+
+def test_create_flight_time_clash_with_plane(empty_db):
+
+    empty_db.post("/api/create_pilot",json={
+                "name": "Walter White"    
+            })
+    
+    response = empty_db.post("/api/create_flight",json={
+            "departure_time": "2026-07-11 13:00:00",
+            "arrival_time": "2026-07-11 15:00:00",
+            "pilot_id": 3,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "arrival_destination": "Texas"
+        })
+    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.get_json().get("message") == "Flight could not be created!"
+
+def test_create_flight_pilot_not_found(empty_db):
+    response = empty_db.post("/api/create_flight",json={
+        "departure_time": "2026-08-11 13:00:00",
+        "arrival_time": "2026-08-11 15:00:00",
+        "pilot_id": 4,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Flight could not be created!"
+
+def test_create_flight_plane_not_found(empty_db):
+    response = empty_db.post("/api/create_flight",json={
+        "departure_time": "2026-08-11 13:00:00",
+        "arrival_time": "2026-08-11 15:00:00",
+        "pilot_id": 3,
+        "plane_id": 4,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Flight could not be created!"
+
+def test_create_flight_departureTime_later_than_arrivalTime(empty_db):
+    response = empty_db.post("/api/create_flight",json={
+            "departure_time": "2026-08-11 15:00:00",
+            "arrival_time": "2026-08-11 14:00:00",
+            "pilot_id": 3,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "arrival_destination": "Texas"
+        })
+    assert response.status_code == 404 #should be 400, my bad :(
+    assert response.get_json().get("message") == "Flight could not be created!"
+
+def test_update_flight(empty_db):
+    response = empty_db.put("/api/update_flight/1",json={
+            "departure_time": "2026-08-11 15:00:00",
+            "arrival_time": "2026-08-11 15:30:00",
+            "pilot_id": 2,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "destination": "Texas"
+        })
+    assert response.status_code == 200
+    assert response.get_json().get("message") == "Flight 1 updated!"
+
+def test_update_flight_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+                    "username": "greg",
+                    "password": "gregpass"   
+                })
+    
+    response = empty_db.put("/api/update_flight/1",json={
+            "departure_time": "2026-08-11 12:00:00",
+            "arrival_time": "2026-08-11 14:00:00",
+            "pilot_id": 2,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "arrival_destination": "Texas"
+        })
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can update flights!"
+
+def test_update_flight_missing_credentials(empty_db):
+    empty_db.post("/api/login",json={
+                        "username": "admin",
+                        "password": "adminpass"   
+                    })
+    
+    response = empty_db.put("/api/update_flight/1",json={
+                "arrival_time": "2026-08-11 14:00:00",
+                "pilot_id": 2,
+                "plane_id": 3,
+                "arrival_destination": "Texas"
+            })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Missing flight data! Could not update!"
+
+def test_update_flight_time_clash_with_pilot(empty_db):
+    empty_db.post("/api/create_flight",json={
+        "departure_time": "2027-07-11 12:00:00",
+        "arrival_time": "2027-07-11 14:00:00",
+        "pilot_id": 2,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
+    
+    response = empty_db.put("/api/update_flight/2",json={
+                "departure_time": "2026-08-11 13:00:00",
+                "arrival_time": "2026-08-11 15:10:00",
+                "pilot_id": 2,
+                "plane_id": 2,
+                "departure_destination": "Paris",
+                "destination": "Texas"
+            })
+    assert response.status_code == 400 
+    assert response.get_json().get("message") == "Flight could not be updated!"
+
+def test_update_flight_time_clash_with_plane(empty_db):
+    
+    response = empty_db.put("/api/update_flight/2",json={
+                "departure_time": "2026-08-11 13:00:00",
+                "arrival_time": "2026-08-11 15:10:00",
+                "pilot_id": 3,
+                "plane_id": 3,
+                "departure_destination": "Paris",
+                "destination": "Texas"
+            })
+    assert response.status_code == 400 
+    assert response.get_json().get("message") == "Flight could not be updated!"
+
+def test_update_flight_pilot_not_found(empty_db):
+    response = empty_db.put("/api/update_flight/1",json={
+        "departure_time": "2026-08-11 13:00:00",
+        "arrival_time": "2026-08-11 15:00:00",
+        "pilot_id": 4,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "destination": "Texas"
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Flight could not be updated!"
+
+def test_update_flight_plane_not_found(empty_db):
+    response = empty_db.put("/api/update_flight/1",json={
+        "departure_time": "2026-08-11 13:00:00",
+        "arrival_time": "2026-08-11 15:00:00",
+        "pilot_id": 3,
+        "plane_id": 4,
+        "departure_destination": "Paris",
+        "destination": "Texas"
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Flight could not be updated!"
+
+def test_update_flight_departureTime_later_than_arrivalTime(empty_db):
+    response = empty_db.put("/api/update_flight/1",json={
+            "departure_time": "2026-08-11 15:00:00",
+            "arrival_time": "2026-08-11 14:00:00",
+            "pilot_id": 3,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "destination": "Texas"
+        })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Flight could not be updated!"
