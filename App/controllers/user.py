@@ -9,7 +9,8 @@ from datetime import datetime
 
 def create_user(username, password, is_admin):
     if is_admin:
-        create_admin(username, password, is_admin)
+        newuser = create_admin(username, password, is_admin)
+        return newuser
     else:
         newuser = User(username=username, password=password, is_admin=is_admin)
         db.session.add(newuser)

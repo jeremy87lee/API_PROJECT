@@ -71,3 +71,18 @@ def test_user_login_bad_credentials(empty_db):
     assert "access_token" not in response.get_json()
     assert response.get_json().get("message") == "bad username or password given"
 
+def test_create_admin(empty_db):
+    response = empty_db.post("/api/create_user",json={
+                "username": "admin",
+                "password": "adminpass",
+                "is_admin": True
+            })
+    assert response.status_code == 201
+    assert "User created!" == response.get_json().get("message")
+
+def test_admin_login(empty_db):
+    response = empty_db.post("/api/login",json={
+        "username": "admin",
+        "password": "adminpass"
+    })
+    assert "access_token" in response.get_json()
