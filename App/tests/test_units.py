@@ -233,6 +233,82 @@ def test_create_plane_not_authorized(empty_db):
     })
     assert response.status_code == 401
     assert response.get_json().get("message") == "Only admins can create planes!"
+
+def test_create_plane_missing_credentials(empty_db):
+    empty_db.post("/api/login",json={
+            "username": "admin",
+            "password": "adminpass"
+        })
+    response = empty_db.post("/api/create_plane",json={
+        "name": "c-130"
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Model or Capacity info missing!"
+
+def test_update_plane(empty_db):
+    response = empty_db.put("/api/update_plane/1",json={
+        "model": "c-130",
+        "capacity": 5
+    })
+    assert response.status_code == 200
+    assert response.get_json().get("message") == "Plane 1 updated!"
+
+def test_update_plane_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    response = empty_db.put("/api/update_plane/1",json={
+        "model": "c-130",
+        "capacity": 10
+    })
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can update planes!"
+
+def test_update_plane_missing_credentials(empty_db):
+    empty_db.post("/api/login",json={
+        "username" : "admin",
+        "password" : "adminpass"
+    })
+    
+    response = empty_db.put("/api/update_plane/1",json={
+        "model" : "c-130"
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Model or Capacity info missing!"
+
+def test_update_plane_not_found(empty_db):
+    response = empty_db.put("/api/update_plane/2",json={
+        "model": "c-130",
+        "capacity": "100"
+    })
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Plane number 2 not found!"
+
+def test_delete_plane(empty_db):
+    response = empty_db.delete("/api/delete_plane/1")
+    assert response.status_code == 200
+    assert response.get_json().get("message") == "Plane 1 deleted!"
+
+def test_delete_plane_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+       "username": "greg",
+       "password": "gregpass" 
+    })
+    
+    response = empty_db.delete("/api/delete_plane/1")
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can delete planes!"
+
+def test_delete_plane_not_found(empty_db):
+    empty_db.post("/api/login",json={
+           "username": "admin",
+           "password": "adminpass" 
+        })
+
+    response = empty_db.delete("/api/delete_plane/2")
+    assert response.status_code == 404
+    assert response.get_json().get("message") == "Plane number 2 not found!"
 """
 Gate Tests
 """
