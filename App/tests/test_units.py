@@ -86,3 +86,70 @@ def test_admin_login(empty_db):
         "password": "adminpass"
     })
     assert "access_token" in response.get_json()
+
+
+'''
+Pilot Tests
+'''
+def test_get_pilots(empty_db):
+    response = empty_db.get("/api/pilots")
+    assert response.status_code == 200
+
+def test_create_pilot(empty_db):
+    response = empty_db.post("/api/create_pilot",json={
+        "name": "Harry Kane"
+    })
+    assert response.status_code == 201
+    assert response.get_json().get("message") == "Pilot created!"
+
+def test_create_pilot_missing_credentials(empty_db):
+    response = empty_db.post("/api/create_pilot",json={
+        
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Name not given!"
+
+def test_create_pilot_name_taken(empty_db):
+    response = empty_db.post("/api/create_pilot",json={
+            "name": "Harry Kane"
+    })
+    assert response.status_code == 400
+    assert response.get_json().get("message") == "Pilot could not be created!"
+
+def test_create_pilot_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    response = empty_db.post("/api/create_pilot",json={
+        "name": "Bobby Brown"
+    })
+    assert response.status_code == 401
+    assert response.get_json().get("message") == "Only admins can create pilots!"
+
+'''
+Plane Tests
+'''
+
+
+
+'''
+Flight Tests
+'''
+def test_get_flights(empty_db):
+    response = empty_db.get("/api/flights")
+    assert response.status_code == 200
+    assert "data" in response.get_json()
+
+@pytest.mark.skip(reason="Pilots and Planes not created yet!")
+def test_create_flight(empty_db):
+    response = empty_db.post("/api/create_flight",json={
+        "departure_time": "2026-07-11 12:00:00",
+        "arrival_time": "2026-07-11 14:00:00",
+        "pilot_id": 2,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
+    assert response.status_code == 201
+    assert response.get_json().get("message") == "Flight created!"
