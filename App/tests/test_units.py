@@ -593,4 +593,129 @@ def test_delete_flight_not_found(empty_db):
     response = empty_db.delete("/api/delete_flight/3")
     assert response.status_code == 404
     assert response.get_json().get("message") == "Flight number 3 could not be found!"
+
+'''
+Gate Tests
+'''
+def test_get_gates(empty_db):
+    response = empty_db.get("/api/gates")
+    assert response.status_code == 200
+    assert "data" in response.get_json()
+
+def test_create_gate(empty_db):
+    empty_db.post("/api/create_flight",json={
+        "departure_time": "2026-07-11 12:00:00",
+        "arrival_time": "2026-07-11 14:00:00",
+        "pilot_id": 2,
+        "plane_id": 3,
+        "departure_destination": "Paris",
+        "arrival_destination": "Texas"
+    })
     
+    response = empty_db.post("/api/create_gate",json={
+        "terminal": "C1",
+        "flight_id": 2
+    })
+    assert response.status_code == 201
+
+def test_create_gate_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    empty_db.post("/api/create_flight",json={
+            "departure_time": "2026-07-12 12:00:00",
+            "arrival_time": "2026-07-12 14:00:00",
+            "pilot_id": 2,
+            "plane_id": 3,
+            "departure_destination": "Paris",
+            "arrival_destination": "Texas"
+        })
+    response = empty_db.post("/api/create_gate",json={
+        "terminal": "C2",
+        "flight_id":3
+    })
+    assert response.status_code == 401
+
+def test_create_gate_missing_info(empty_db):
+    empty_db.post("/api/login",json={
+            "username": "admin",
+            "password": "adminpass"
+        })
+    response = empty_db.post("/api/create_gate",json={
+        "terminal": "C3"
+    })
+    assert response.status_code == 400
+
+def test_create_gate_flight_not_found(empty_db):
+    response = empty_db.post("/api/create_gate",json={
+        "terminal": "C3",
+        "flight_id": 4
+    })
+    assert response.status_code == 400
+
+def test_update_gate(empty_db):
+    response = empty_db.put("/api/update_gate/1",json={
+        "terminal": "C2",
+        "flight_id": 2
+    })
+    assert response.status_code == 200
+
+def test_update_gate_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    response = empty_db.put("/api/update_gate/1",json={
+        "terminal": "C1",
+        "flight_id": 2
+    })
+    assert response.status_code == 401
+
+def test_update_gate_missing_info(empty_db):
+    empty_db.post("/api/login",json={
+            "username": "admin",
+            "password": "adminpass"
+        })
+    response = empty_db.put("/api/update_gate/1",json={
+        
+    })
+    assert response.status_code == 400
+
+def test_update_gate_flight_not_found(empty_db):
+    response = empty_db.put("/api/update_gate/1",json={
+        "terminal": "C2",
+        "flight_id": 6
+    })
+    assert response.status_code == 400
+
+def test_update_gate_flight_clash(empty_db):
+    empty_db.post("/api/create_gate",json={
+        "terminal": "C2",
+        "flight_id": 3
+    })
+    response = empty_db.put("/api/update_gate/1",json={
+            "terminal": "C3",
+            "flight_id": 3
+        })
+    assert response.status_code == 400
+
+def test_delete_gate(empty_db):
+    response = empty_db.delete("/api/delete_gate/1")
+    assert response.status_code == 200
+    
+def test_delete_gate_not_authorized(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "greg",
+        "password": "gregpass"
+    })
+    response = empty_db.delete("/api/delete_gate/2")
+    assert response.status_code == 401
+
+def test_delete_gate_not_found(empty_db):
+    empty_db.post("/api/login",json={
+        "username": "admin",
+        "password": "adminpass"
+    })
+    response = empty_db.delete("/api/delete_gate/1")
+    assert response.status_code == 404
