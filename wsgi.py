@@ -60,7 +60,7 @@ def user_tests_command(type):
     if type == "unit":
         sys.exit(pytest.main(["App/tests/test_units.py","-v"]))
     elif type == "int":
-        sys.exit(pytest.main(["-k", "UserIntegrationTests"]))
+        sys.exit(pytest.main(["App/tests/test_integration.py","-v"]))
     else:
         sys.exit(pytest.main(["-k", "App"]))
     
