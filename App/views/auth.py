@@ -49,13 +49,17 @@ API Routes
 
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
-  data = request.json
-  token = login(data['username'], data['password'])
-  if not token:
-    return jsonify(message='bad username or password given'), 401
-  response = jsonify(access_token=token) 
-  set_access_cookies(response, token)
-  return response
+    data = request.json
+    if not data or not data.get('username') or not data.get('password'):
+        return jsonify({"message": "Username and password are required"}), 400
+
+    token = login(data.get('username'), data.get('password'))
+    if not token:
+        return jsonify(message='bad username or password given'), 401
+
+    response = jsonify(access_token=token)
+    set_access_cookies(response, token)
+    return response
 
 @auth_views.route('/api/identify', methods=['GET'])
 @jwt_required()
