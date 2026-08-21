@@ -30,6 +30,15 @@ function FlightsPage() {
                 setError("Could not logout!")
             }
     }
+
+    const GoToPilotsPage = () => {
+        navigate("/pilots")
+    }
+
+    const GoToPlanesPage = () =>{
+        navigate("/planes")
+    }
+
     return (
         <div>
         <div>
@@ -50,6 +59,14 @@ function FlightsPage() {
                 Logout()
             }}>Logout</button>
             <p>{error}</p>
+            <button onClick={() => {
+                GoToPilotsPage()
+            }}>Pilots Page</button>
+            <button onClick={() => {
+                GoToPlanesPage()
+            }}>
+                Planes Page
+            </button>
         </div>
         </div>
     );
