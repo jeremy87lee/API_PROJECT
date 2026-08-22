@@ -8,6 +8,7 @@ function FlightsPage() {
     const [flights,setFlights] = useState([])
     const [error,setError] = useState("")
     const navigate = useNavigate()
+    const isAdmin = localStorage.getItem("isAdmin") == "true";
 
     const displayFlights = async ()=>{
         const response = await apiFetch("/flights");
@@ -43,6 +44,8 @@ function FlightsPage() {
         <div>
         <div>
         <h1>Flights</h1>
+        {isAdmin && <h2>Welcome Admin!</h2>}
+        {!isAdmin && <h2>Welcome User!</h2>}
             <ul>
                 {flights.map((flight) => (
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 

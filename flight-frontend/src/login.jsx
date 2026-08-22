@@ -20,6 +20,7 @@ function LoginPage(){
         if(response.ok){
             const data = await response.json();
             localStorage.setItem("token",data.access_token);
+            localStorage.setItem("isAdmin",data.is_admin)
             navigate("/flights");
         }else{
             setError("Invalid username or password");
