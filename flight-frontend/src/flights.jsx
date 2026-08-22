@@ -2,6 +2,7 @@ import { useState } from "react";
 import { apiFetch } from "./api";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import NavBar from "./navBar";
 
 
 function FlightsPage() {
@@ -32,21 +33,11 @@ function FlightsPage() {
             }
     }
 
-    const GoToPilotsPage = () => {
-        navigate("/pilots")
-    }
-
-    const GoToPlanesPage = () =>{
-        navigate("/planes")
-    }
-
-    const GoToGatesPage = () =>{
-        navigate("/gates")
-    }
 
     return (
         <div>
         <div>
+        <NavBar />
         <h1>Flights</h1>
         {isAdmin && <h2>Welcome Admin!</h2>}
         {!isAdmin && <h2>Welcome User!</h2>}
@@ -66,19 +57,7 @@ function FlightsPage() {
                 Logout()
             }}>Logout</button>
             <p>{error}</p>
-            <button onClick={() => {
-                GoToPilotsPage()
-            }}>Pilots Page</button>
-            <button onClick={() => {
-                GoToPlanesPage()
-            }}>
-                Planes Page
-            </button>
-            <button onClick={() => {
-                GoToGatesPage()
-            }}>
-                Gates Page
-            </button>
+            
         </div>
         </div>
     );

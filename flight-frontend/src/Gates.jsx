@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "./api";
+import NavBar from "./navBar";
 
 function GatesPage(){
     const navigate = useNavigate()
@@ -20,20 +21,16 @@ function GatesPage(){
         fetch()
     },[]);
 
-    const GoBackToFlightsPage = () => {
-        navigate("/flights")
-    }
+
 
     return(
         <div>
+            <NavBar />
             <ul>
                 {gates.map((gate) => (
                     <li>Gate number {gate.id} - Gate terminal {gate.terminal} - Gate flight {gate.flight} </li>
                 ))}
             </ul>
-            <button onClick={() => {
-                GoBackToFlightsPage()
-            }}>Go Back To Flights Page</button>
         </div>
     );
 }

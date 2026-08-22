@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "./api";
 import { useNavigate } from "react-router-dom";
+import NavBar from "./navBar"
 
 function PilotsPage(){
     const navigate = useNavigate()
@@ -19,21 +20,17 @@ function PilotsPage(){
         fetch();
     },[])
 
-    const goBackToFlightsPage = () => {
-        navigate("/flights")
-    }
+  
 
     return (
         <div>
+            <NavBar />
             <h1>Pilots</h1>
             <ul>
             {pilots.map((pilot) => (
               <li>{pilot.id} - {pilot.name}</li>  
             ))}
             </ul>
-            <button onClick={() => {
-                goBackToFlightsPage()
-            }}>Go Back To Flights Page</button>
         </div>
 
     )
