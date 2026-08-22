@@ -19,7 +19,7 @@ def login_function():
     data = request.json
     token = login(data.get("username"),data.get("password"))
     if token:
-        response = jsonify(access_token=token)
+        response = jsonify(access_token=token,is_admin=jwt_current_user.is_admin)
         set_access_cookies(response, token)
         return response
     else:
