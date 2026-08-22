@@ -13,18 +13,18 @@ api_views = Blueprint('api_views',__name__, url_prefix='/api')
 @api_views.route('/ping',methods=['GET'])
 def ping():
     return jsonify({"message":f"pong"}), 200
-
+"""
 @api_views.route('/login',methods=['POST'])
 def login_function():
     data = request.json
-    token = login(data.get("username"),data.get("password"))
+    token,user_is_admin = login(data.get("username"),data.get("password"))
     if token:
-        response = jsonify(access_token=token,is_admin=jwt_current_user.is_admin)
+        response = jsonify(access_token=token,is_admin=user_is_admin)
         set_access_cookies(response, token)
         return response
     else:
         return jsonify({"message":f"Bad Credentials!"}),401
-
+"""
 @api_views.route('/init',methods=['GET'])
 def init():
     initialize()

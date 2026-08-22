@@ -53,11 +53,11 @@ def user_login_api():
     if not data or not data.get('username') or not data.get('password'):
         return jsonify({"message": "Username and password are required"}), 400
 
-    token = login(data.get('username'), data.get('password'))
+    token,user_is_admin = login(data.get('username'), data.get('password'))
     if not token:
         return jsonify(message='bad username or password given'), 401
 
-    response = jsonify(access_token=token)
+    response = jsonify(access_token=token,is_admin=user_is_admin)
     set_access_cookies(response, token)
     return response
 
