@@ -40,6 +40,10 @@ function FlightsPage() {
         navigate("/planes")
     }
 
+    const GoToGatesPage = () =>{
+        navigate("/gates")
+    }
+
     return (
         <div>
         <div>
@@ -69,6 +73,11 @@ function FlightsPage() {
                 GoToPlanesPage()
             }}>
                 Planes Page
+            </button>
+            <button onClick={() => {
+                GoToGatesPage()
+            }}>
+                Gates Page
             </button>
         </div>
         </div>
