@@ -46,12 +46,12 @@ function FlightsPage() {
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 
                     {flight.departure_time}- {flight.arrival_time} - 
                     {flight.departure_destination}- {flight.destination}
+                    {isAdmin && <button>Hi</button>}
                     </li>
-                ))}
-                
+                ))}                
             </ul>
         </div>
-
+        {isAdmin && <button onClick={() => {navigate("/create-flight")}}>Create Flight</button>}
         <div>
             <button onClick={() => {
                 Logout()

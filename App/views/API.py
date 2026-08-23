@@ -55,8 +55,8 @@ def create_general_user():
 @api_views.route('/flights',methods=['GET'])
 @jwt_required()
 def get_flights():
-    page = request.args.get("page",1,type=int)
-    per_page = request.args.get("per_page",3,type=int)
+    page = request.args.get("page",type=int)
+    per_page = request.args.get("per_page",type=int)
     destination = request.args.get("destination",None)
     sort = request.args.get("sort",None)
     flights = get_all_flights_json(page=page,per_page=per_page,destination=destination,sort=sort)
