@@ -41,6 +41,18 @@ function FlightsPage() {
         navigate("/update-flight")
     }
 
+    const DeleteFlight = async(flight_id) => {
+        const baseURL = "delete_flight"
+        const response = await apiFetch(`/${baseURL}/${flight_id}`,{
+            method: "DELETE"
+        })
+        if(response.ok){
+            displayFlights()
+        }else{
+            setError("Could not delete!")
+        }
+    }
+
     return (
         <div>
         <div>
@@ -54,6 +66,7 @@ function FlightsPage() {
                     {flight.departure_time}- {flight.arrival_time} - 
                     {flight.departure_destination}- {flight.destination}
                     {isAdmin && <button onClick={() => {GoToUpdateFlightPage(flight.id)}}>Update Flight</button>}
+                    {isAdmin && <button onClick={() => {DeleteFlight(flight.id)}}>Delete Flight</button>}
                     </li>
                 ))}                
             </ul>
