@@ -15,6 +15,9 @@ function GatesPage(){
             setGates(data.data)
             console.log("good fetch")
         }
+        if(response.status == 401){
+            navigate("/")
+        }
     }
 
     useEffect(() => {

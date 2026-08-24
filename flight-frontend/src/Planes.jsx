@@ -14,6 +14,9 @@ function PlanesPage(){
             setPlanes(data.data)
             console.log("got planes yo")
         }
+        if(response.status == 401){
+            Navigate("/")
+        }
     }
 
     useEffect(() => {

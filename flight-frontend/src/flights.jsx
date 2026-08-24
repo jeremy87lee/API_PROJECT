@@ -17,6 +17,9 @@ function FlightsPage() {
             const data = await response.json()
             setFlights(data.data);
         }
+        if(response.status == 401){
+            navigate("/")
+        }
     }
 
     useEffect(() => {

@@ -14,6 +14,9 @@ function PilotsPage(){
             setPilots(data.data);
             console.log("good fetch")
         }
+        if(response.status == 401){
+            navigate("/")
+        }
     }
 
     useEffect(() => {
