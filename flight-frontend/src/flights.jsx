@@ -36,6 +36,10 @@ function FlightsPage() {
             }
     }
 
+    const GoToUpdateFlightPage = (flight_id) => {
+        localStorage.setItem("flight_id",flight_id)
+        navigate("/update-flight")
+    }
 
     return (
         <div>
@@ -49,7 +53,7 @@ function FlightsPage() {
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 
                     {flight.departure_time}- {flight.arrival_time} - 
                     {flight.departure_destination}- {flight.destination}
-                    {isAdmin && <button onClick={() => {navigate("/update-flight")}}>Update Flight</button>}
+                    {isAdmin && <button onClick={() => {GoToUpdateFlightPage(flight.id)}}>Update Flight</button>}
                     </li>
                 ))}                
             </ul>
