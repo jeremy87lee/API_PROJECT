@@ -10,6 +10,7 @@ import PlanesPage from './Planes'
 import GatesPage from './Gates'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import CreateFlight from './create-flight'
+import UpdateFlight from './update-flight'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -23,6 +24,7 @@ function App() {
         <Route path="/planes" element={<PlanesPage />} />
         <Route path="/gates" element={<GatesPage />} />
         <Route path="/create-flight" element={<CreateFlight />} />
+        <Route path="/update-flight" element={<UpdateFlight />} />
       </Routes>
     </BrowserRouter>
   )

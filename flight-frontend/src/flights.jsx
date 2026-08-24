@@ -49,7 +49,7 @@ function FlightsPage() {
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 
                     {flight.departure_time}- {flight.arrival_time} - 
                     {flight.departure_destination}- {flight.destination}
-                    {isAdmin && <button>Hi</button>}
+                    {isAdmin && <button onClick={() => {navigate("/update-flight")}}>Update Flight</button>}
                     </li>
                 ))}                
             </ul>
@@ -60,7 +60,6 @@ function FlightsPage() {
                 Logout()
             }}>Logout</button>
             <p>{error}</p>
-            
         </div>
         </div>
     );
