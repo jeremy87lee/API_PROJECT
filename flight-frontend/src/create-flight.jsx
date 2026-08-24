@@ -16,6 +16,13 @@ function createFlight(){
 
     const fetch = async (e) => {
         e.preventDefault()
+
+        const dateTimePattern = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/;
+        if (!dateTimePattern.test(departureTime) || !dateTimePattern.test(arrivalTime)){
+            setMsg("Please enter a date and time in the format 2026-12-12 10:00:00")
+            return None;
+        }
+
         const response = await apiFetch("/create_flight",{
             method: "POST",
             body: JSON.stringify({
@@ -33,7 +40,11 @@ function createFlight(){
             navigate("/flights")
         }else{
             const resp = await response.json()
-            setMsg(resp.message)
+            if(resp.message == "Missing flight data! Could not be created!"){
+                setMsg(resp.message)
+            }else{
+                setMsg(resp.message + " There might be a time clash or incorrect ID input!")
+            }
             console.log("bad")
         }
     }
