@@ -72,6 +72,18 @@ function FlightsPage() {
         <h1>Flights</h1>
         {isAdmin && <h2>Welcome Admin!</h2>}
         {!isAdmin && <h2>Welcome User!</h2>}
+
+        <div>
+            <input placeholder="Filter by Destination" value={destination} onChange={(e) => {setPage(1); setDestination(e.target.value)}}/>
+        </div>
+        <div>
+            <select value={sort} onChange={(e) => {setPage(1); setSort(e.target.value)}}>
+                <option value="">No Sort</option>
+                <option value="departure_time">Departure time(earliest)</option>
+                <option value="-departure_time">Departure time(latest)</option>
+            </select>
+        </div>
+
             <ul>
                 {flights.map((flight) => (
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 
@@ -90,16 +102,7 @@ function FlightsPage() {
             }}>Logout</button>
             <p>{error}</p>
         </div>
-        <div>
-            <input placeholder="Filter by Destination" value={destination} onChange={(e) => {setPage(1); setDestination(e.target.value)}}/>
-        </div>
-        <div>
-            <select value={sort} onChange={(e) => {setPage(1); setSort(e.target.value)}}>
-                <option value="">No Sort</option>
-                <option value="departure_time">Departure time(earliest)</option>
-                <option value="-departure_time">Departure time(latest)</option>
-            </select>
-        </div>
+        
         <div>
             <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
             <span>Page {page} of {totalPages}</span>
