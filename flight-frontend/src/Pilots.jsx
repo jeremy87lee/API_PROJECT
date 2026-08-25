@@ -6,13 +6,22 @@ import NavBar from "./navBar"
 function PilotsPage(){
     const navigate = useNavigate()
     const [pilots,setPilots] = useState([])
+    const [page,setPage] = useState(1)
+    const [perPage,setPerPage] = useState(3)
+    const [totalPages,setTotalPages] = useState(1)
+    const [sort,setSort] = useState("")
 
     const fetch = async() => {
-        const response = await apiFetch("/pilots")
+        const params = new URLSearchParams()
+        params.set("page",page)
+        params.set("per_page",perPage)
+        sort && params.set("sort",sort)
+        const response = await apiFetch(`/pilots?${params.toString()}`)
         if(response.ok){
             const data = await response.json()
             setPilots(data.data);
             console.log("good fetch")
+            setTotalPages(data.total_pages)
         }
         if(response.status == 401){
             navigate("/")
@@ -21,7 +30,7 @@ function PilotsPage(){
 
     useEffect(() => {
         fetch();
-    },[])
+    },[sort,page])
 
   
 
@@ -29,11 +38,23 @@ function PilotsPage(){
         <div>
             <NavBar />
             <h1>Pilots</h1>
+            <div>
+                <select value={sort} onChange={(e) => {setPage(1);setSort(e.target.value)}}>
+                    <option value="">No Sort</option>
+                    <option value="name">Name (ascending)</option>
+                    <option value="-name">Name (descending)</option>
+                </select>
+            </div>
             <ul>
             {pilots.map((pilot) => (
               <li>{pilot.id} - {pilot.name}</li>  
             ))}
             </ul>
+            <div>
+                <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
+                <spam>page {page} of {totalPages}</spam>
+                <button disabled= {page >= totalPages} onClick={() => {setPage(page+1)}}>Next</button>
+            </div>
         </div>
 
     )
