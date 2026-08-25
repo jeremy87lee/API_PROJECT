@@ -42,6 +42,18 @@ function PilotsPage(){
         navigate("/update-pilot")
     }
 
+    const DeletePilot = async(pilot_id) => {
+        const response = await apiFetch(`/delete_pilot/${pilot_id}`,{
+            method: "DELETE"
+        })
+        if(response.ok){
+            fetch()
+            alert("Pilot "+pilot_id+" deleted!")
+        }else{
+            alert("Pilot "+pilot_id+" could not be deleted!")    
+        }
+    }
+
     return (
         <div>
             <NavBar />
@@ -55,7 +67,8 @@ function PilotsPage(){
             </div>
             <ul>
             {pilots.map((pilot) => (
-              <li>{pilot.id} - {pilot.name} <button onClick={() => {GoToUpdatePilotPage(pilot.id)}}>Update Pilot</button></li>  
+              <li>{pilot.id} - {pilot.name} <button onClick={() => {GoToUpdatePilotPage(pilot.id)}}>Update Pilot</button>
+              <button onClick={() => {DeletePilot(pilot.id)}}>Delete</button></li>  
             ))}
             </ul>
             <div>
