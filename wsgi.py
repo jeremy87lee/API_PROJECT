@@ -5,7 +5,7 @@ from App.database import db, get_migrate
 from App.models import User
 from App.main import create_app
 from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
-import requests
+import requests, json
 
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -93,5 +93,37 @@ def login_command(username,password):
     if(response.ok):
         print("Logged in!")
         print(response.json())
+        save_token(response.json().get("access_token"))
     else:
         print(response.json().get("message"))
+
+def save_token(token):
+    with open(".cli_token.json","w") as f:
+        json.dump({"token":token},f)
+
+def load_token():
+    try: 
+        with open(".cli_token.json","r") as f:
+            data = json.load(f)
+            return data.get("token")
+    except FileNotFoundError:
+        return None
+
+
+""" Display commands """
+@cli_client.command("list flights",help="Lists all flights")
+@click.argument("page",default=1)
+@click.argument("per_page",default=5)
+@click.argument("destination",default="Los Angeles")
+@click.argument("sort",default="-departure_time")
+def list_flights(page,per_page,destination,sort):
+    token = load_token()
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    response = requests.get(
+        "http://127.0.0.1:8080/api/flights",
+        params={"page":page,
+                "per_page":per_page,
+                "destination":destination,
+                "sort":sort}, headers=headers
+    )
+    print(response.json().get("data"))
