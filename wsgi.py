@@ -5,6 +5,7 @@ from App.database import db, get_migrate
 from App.models import User
 from App.main import create_app
 from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
+import requests
 
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -66,3 +67,18 @@ def user_tests_command(type):
     
 
 app.cli.add_command(test)
+
+cli_client = AppGroup('cli_client',help='CLI client for API project')
+app.cli.add_command(cli_client)
+
+@cli_client.command("create user",help="Command to create a new user")
+@click.argument("username",default="jeremy")
+@click.argument("password",default="jeremypass")
+@click.argument("is_admin",default=False)
+def create_user_command(username,password,is_admin):
+    response = requests.post(
+        "http://127.0.0.1:8080/api/create_user",
+        json={"username": username,"password":password,"is_admin":is_admin}
+    )
+    print(response.json().get("message"))
+
