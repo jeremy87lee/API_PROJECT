@@ -154,3 +154,30 @@ def create_flight_command(plane_id,pilot_id,departure_destination,destination,de
     else:
         print(response.json().get("message"))
 
+@cli_client.command("update flight",help="update a flight")
+@click.argument("flight_id",default=1)
+@click.argument("plane_id",default=1)
+@click.argument("pilot_id",default=1)
+@click.argument("departure_time",default="2026-08-25 23:00:00")
+@click.argument("arrival_time",default="2027-08-25 02:30:00")
+@click.argument("departure_destination",default="Trinidad")
+@click.argument("destination",default="Antigua")
+def update_flight_command(plane_id,pilot_id,departure_destination,destination,departure_time,arrival_time,flight_id):
+    token = load_token()
+    response = requests.put(
+        "http://127.0.0.1:8080/api/update_flight/"+str(flight_id),  
+        headers={"Authorization": f"Bearer {token}"} if token else {},
+        json={
+            "plane_id":plane_id,
+            "pilot_id":pilot_id,
+            "departure_destination":departure_destination,
+            "destination":destination,
+            "departure_time":departure_time,
+            "arrival_time":arrival_time     
+        } 
+    )
+    if response.ok:
+        print("flight number "+str(flight_id)+" updated!")
+    else:
+        print(response.json().get("message"))
+    
