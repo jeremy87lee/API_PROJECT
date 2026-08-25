@@ -82,3 +82,16 @@ def create_user_command(username,password,is_admin):
     )
     print(response.json().get("message"))
 
+@cli_client.command("login",help="Command to login a user")
+@click.argument("username",default="admin")
+@click.argument("password",default="adminpass")
+def login_command(username,password):
+    response = requests.post(
+        "http://127.0.0.1:8080/api/login",
+        json={"username":username,"password":password}
+    )
+    if(response.ok):
+        print("Logged in!")
+        print(response.json())
+    else:
+        print(response.json().get("message"))
