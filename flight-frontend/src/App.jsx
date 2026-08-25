@@ -11,6 +11,7 @@ import GatesPage from './Gates'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import CreateFlight from './create-flight'
 import UpdateFlight from './update-flight'
+import CreatePilot from './create-pilot'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +26,7 @@ function App() {
         <Route path="/gates" element={<GatesPage />} />
         <Route path="/create-flight" element={<CreateFlight />} />
         <Route path="/update-flight" element={<UpdateFlight />} />
+        <Route path="/create-pilot" element={<CreatePilot />} />
       </Routes>
     </BrowserRouter>
   )

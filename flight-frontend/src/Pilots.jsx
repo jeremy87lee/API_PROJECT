@@ -10,6 +10,7 @@ function PilotsPage(){
     const [perPage,setPerPage] = useState(3)
     const [totalPages,setTotalPages] = useState(1)
     const [sort,setSort] = useState("")
+    const isAdmin = localStorage.getItem("isAdmin")
 
     const fetch = async() => {
         const params = new URLSearchParams()
@@ -32,7 +33,9 @@ function PilotsPage(){
         fetch();
     },[sort,page])
 
-  
+    const GoToCreatePilot = () => {
+        navigate("/create-pilot")
+    }
 
     return (
         <div>
@@ -50,6 +53,9 @@ function PilotsPage(){
               <li>{pilot.id} - {pilot.name}</li>  
             ))}
             </ul>
+            <div>
+                {isAdmin && <button onClick={() => {GoToCreatePilot()}}>Create Pilot</button>}
+            </div>
             <div>
                 <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
                 <spam>page {page} of {totalPages}</spam>
