@@ -37,6 +37,11 @@ function PilotsPage(){
         navigate("/create-pilot")
     }
 
+    const GoToUpdatePilotPage = (pilot_id) => {
+        localStorage.setItem("pilotId",pilot_id)
+        navigate("/update-pilot")
+    }
+
     return (
         <div>
             <NavBar />
@@ -50,7 +55,7 @@ function PilotsPage(){
             </div>
             <ul>
             {pilots.map((pilot) => (
-              <li>{pilot.id} - {pilot.name}</li>  
+              <li>{pilot.id} - {pilot.name} <button onClick={() => {GoToUpdatePilotPage(pilot.id)}}>Update Pilot</button></li>  
             ))}
             </ul>
             <div>

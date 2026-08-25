@@ -12,6 +12,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import CreateFlight from './create-flight'
 import UpdateFlight from './update-flight'
 import CreatePilot from './create-pilot'
+import UpdatePilot from './update-pilot'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -27,6 +28,7 @@ function App() {
         <Route path="/create-flight" element={<CreateFlight />} />
         <Route path="/update-flight" element={<UpdateFlight />} />
         <Route path="/create-pilot" element={<CreatePilot />} />
+        <Route path="/update-pilot" element={<UpdatePilot />} />
       </Routes>
     </BrowserRouter>
   )
