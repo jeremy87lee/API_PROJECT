@@ -127,3 +127,29 @@ def list_flights(page,per_page,destination,sort):
                 "sort":sort}, headers=headers
     )
     print(response.json().get("data"))
+
+@cli_client.command("create flight",help="Creates a flight")
+@click.argument("plane_id",default=1)
+@click.argument("pilot_id",default=1)
+@click.argument("departure_time",default="2026-08-25 10:00:00")
+@click.argument("arrival_time",default="2026-08-25 12:30:00")
+@click.argument("departure_destination",default="Trinidad")
+@click.argument("destination",default="Antigua")
+def create_flight_command(plane_id,pilot_id,departure_destination,destination,departure_time,arrival_time):
+    token = load_token()
+    response = requests.post(
+        "http://127.0.0.1:8080/api/create_flight",
+        json= {
+            "plane_id":plane_id,
+            "pilot_id":pilot_id,
+            "departure_destination":departure_destination,
+            "arrival_destination":destination,
+            "departure_time":departure_time,
+            "arrival_time":arrival_time
+        },
+        headers = {"Authorization": f"Bearer {token}"} if token else {}
+    )
+    if response.ok:
+        print("Flight created!")
+    else:
+        print(response.json().get("message"))
