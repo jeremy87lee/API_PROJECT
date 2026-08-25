@@ -180,4 +180,16 @@ def update_flight_command(plane_id,pilot_id,departure_destination,destination,de
         print("flight number "+str(flight_id)+" updated!")
     else:
         print(response.json().get("message"))
-    
+
+@cli_client.command("delete flight",help="Delete a flight")
+@click.argument("flight_id",default=1)
+def delete_flight_command(flight_id):
+    token = load_token()
+    response = requests.delete(
+        "http://127.0.0.1:8080/api/delete_flight/"+str(flight_id),
+        headers={"Authorization": f"Bearer {token}"} if token else {}
+    )
+    if response.ok:
+        print("Flight number "+str(flight_id)+" deleted!")
+    else:
+        print(response.json().get("message"))
