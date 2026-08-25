@@ -6,13 +6,25 @@ import NavBar from "./navBar";
 function PlanesPage(){
     const [planes,setPlanes] = useState([])
     const Navigate = useNavigate()
+    const [page,setPage] = useState(1)
+    const [perPage,setPerpage] = useState(3)
+    const [model,setModel] = useState("")
+    const [totalPage,setTotalPage] = useState(1)
+    const [sort,setSort] = useState("")
 
     const fetch = async() => {
-        const response = await apiFetch("/planes")
+        const params = new URLSearchParams()
+        params.set("page",page)
+        params.set("per_page",perPage)
+        model && params.set("model",model)
+        sort && params.set("sort",sort)
+
+        const response = await apiFetch(`/planes?${params.toString()}`)
         if(response.ok){
             const data = await response.json()
             setPlanes(data.data)
             console.log("got planes yo")
+            setTotalPage(data.total_pages)
         }
         if(response.status == 401){
             Navigate("/")
@@ -21,7 +33,7 @@ function PlanesPage(){
 
     useEffect(() => {
         fetch()
-    },[])
+    },[sort,model,page])
 
  
 
@@ -29,11 +41,26 @@ function PlanesPage(){
         <div>
             <NavBar />
             <h1>Planes</h1>
+            <div>
+                <input placeholder="Filter by model" value={model} onChange={(e) => {setPage(1);setModel(e.target.value)}}/>
+            </div>
+            <div>
+                <select value={sort} onChange={(e) =>{setPage(1);setSort(e.target.value)}}>
+                    <option value="capacity">Capacity(ascending)</option>
+                    <option value="-capacity">Capacity(descending)</option>
+                    <option value="">No Sort</option>
+                </select>
+            </div>
             <ul>
             {planes.map((plane) => (
                 <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}</li>
             ))}
             </ul>
+            <div>
+                <button disabled = {page <= 1} onClick={() => {setPage(page-1)}} >Previous</button>
+                <spam>page {page} of {totalPage}</spam>
+                <button disabled = {page >= totalPage} onClick={() => {setPage(page+1)}}>Next</button>
+            </div>
         </div>
     )
 }
