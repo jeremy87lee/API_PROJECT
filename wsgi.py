@@ -110,7 +110,7 @@ def load_token():
         return None
 
 
-""" Display commands """
+""" Flight commands """
 @cli_client.command("list flights",help="Lists all flights")
 @click.argument("page",default=1)
 @click.argument("per_page",default=5)
@@ -153,3 +153,4 @@ def create_flight_command(plane_id,pilot_id,departure_destination,destination,de
         print("Flight created!")
     else:
         print(response.json().get("message"))
+
