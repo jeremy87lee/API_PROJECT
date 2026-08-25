@@ -89,8 +89,8 @@ function FlightsPage() {
                     <li key={flight.id}>{flight.pilot}- {flight.plane} - 
                     {flight.departure_time}- {flight.arrival_time} - 
                     {flight.departure_destination}- {flight.destination}
-                    {isAdmin && <button onClick={() => {GoToUpdateFlightPage(flight.id)}}>Update Flight</button>}
-                    {isAdmin && <button onClick={() => {DeleteFlight(flight.id)}}>Delete Flight</button>}
+                    {isAdmin && <button onClick={() => {GoToUpdateFlightPage(flight.id)}}>Update</button>}
+                    {isAdmin && <button onClick={() => {DeleteFlight(flight.id)}}>Delete</button>}
                     </li>
                 ))}                
             </ul>

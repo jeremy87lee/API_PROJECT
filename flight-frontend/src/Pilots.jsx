@@ -10,7 +10,7 @@ function PilotsPage(){
     const [perPage,setPerPage] = useState(3)
     const [totalPages,setTotalPages] = useState(1)
     const [sort,setSort] = useState("")
-    const isAdmin = localStorage.getItem("isAdmin")
+    const isAdmin = localStorage.getItem("isAdmin") == "true"
 
     const fetch = async() => {
         const params = new URLSearchParams()
@@ -67,8 +67,10 @@ function PilotsPage(){
             </div>
             <ul>
             {pilots.map((pilot) => (
-              <li>{pilot.id} - {pilot.name} <button onClick={() => {GoToUpdatePilotPage(pilot.id)}}>Update Pilot</button>
-              <button onClick={() => {DeletePilot(pilot.id)}}>Delete</button></li>  
+              <li>{pilot.id} - {pilot.name} 
+              {isAdmin && <button onClick={() => {GoToUpdatePilotPage(pilot.id)}}>Update</button>}
+              {isAdmin && <button onClick={() => {DeletePilot(pilot.id)}}>Delete</button>}
+              </li>  
             ))}
             </ul>
             <div>
