@@ -333,3 +333,75 @@ def delete_pilot_command(pilot_id):
         print("Pilot "+str(pilot_id)+" deleted!")
     else:
         print(response.json().get("message"))
+
+'''Gate Commands'''
+
+@cli_client.command("list gates",help="List all gates")
+@click.argument("page",default=1)
+@click.argument("per_page",default=3)
+@click.argument("sort",default="-terminal")
+def list_gates_command(page,per_page,sort):
+    token = load_token()
+    response = requests.get(
+        "http://127.0.0.1:8080/api/gates",
+        headers={"Authorization":f"Bearer {token}" if token else{}},
+        params={
+            "page":page,
+            "per_page":per_page,
+            "sort":sort
+        }   
+    )
+    if response.ok:
+        print(response.json().get("data"))
+    else:
+        print("could not list gates!")
+
+@cli_client.command("create gate",help="Create a gate")
+@click.argument("flight_id",default=5)
+@click.argument("terminal",default="A1")
+def create_gate_command(flight_id,terminal):
+    token = load_token()
+    response = requests.post(
+        "http://127.0.0.1:8080/api/create_gate",
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "terminal":terminal,
+            "flight_id":flight_id
+        }
+    )
+    if response.ok:
+        print("Gate created for terminal "+terminal)
+    else:
+        print(response.json().get("message"))
+
+@cli_client.command("update gate",help="Update a gate")
+@click.argument("gate_id",default=5)
+@click.argument("flight_id",default=5)
+@click.argument("terminal",default="A1")
+def update_gate_command(flight_id,terminal,gate_id):
+    token = load_token()
+    response = requests.put(
+        "http://127.0.0.1:8080/api/update_gate/"+str(gate_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "terminal":terminal,
+            "flight_id":flight_id
+        }
+    )
+    if response.ok:
+        print("Gate "+str(gate_id)+" updated!")
+    else:
+        print(response.json().get("message"))
+
+@cli_client.command("delete gate",help="delete a gate")
+@click.argument("gate_id",default=2)
+def delete_gate_command(gate_id):
+    token = load_token()
+    response = requests.delete(
+        "http://127.0.0.1:8080/api/delete_gate/"+str(gate_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}}
+    )
+    if response.ok:
+        print("Gate "+str(gate_id)+" deleted!")
+    else:
+        print(response.json().get("message"))
