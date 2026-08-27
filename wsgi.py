@@ -214,3 +214,21 @@ def list_planes_command(page,per_page,model,sort):
         print(response.json().get("data"))   
     else:
         print("could not display!") 
+
+@cli_client.command("create plane",help="Create a plane")
+@click.argument("model",default="Boeing 737")
+@click.argument("capacity",default="180")
+def create_plane_command(model,capacity):
+    token = load_token()
+    response = requests.post(
+        "http://127.0.0.1:8080/api/create_plane",
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "model":model,
+            "capacity":capacity
+        }
+    )
+    if response.ok:
+        print("a "+model+" was created!")
+    else:
+        print(response.json().get("message"))
