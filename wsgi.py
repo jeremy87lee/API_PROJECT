@@ -237,7 +237,7 @@ def create_plane_command(model,capacity):
 @click.argument("plane_id",default=1)
 @click.argument("model",default="Boeing 747")
 @click.argument("capacity",default="360")
-def create_plane_command(model,capacity,plane_id):
+def update_plane_command(model,capacity,plane_id):
     token = load_token()
     response = requests.put(
         "http://127.0.0.1:8080/api/update_plane/"+str(plane_id),
@@ -249,5 +249,18 @@ def create_plane_command(model,capacity,plane_id):
     )
     if response.ok:
         print("plane "+str(plane_id)+" was updated!")
+    else:
+        print(response.json().get("message"))
+
+@cli_client.command("delete plane",help="Delete a plane")
+@click.argument("plane_id",default=1)
+def delete_plane_command(plane_id):
+    token = load_token()
+    response = requests.delete(
+        "http://127.0.0.1:8080/api/delete_plane/"+str(plane_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}}
+    )
+    if response.ok:
+        print("plane "+str(plane_id)+" was deleted!")
     else:
         print(response.json().get("message"))
