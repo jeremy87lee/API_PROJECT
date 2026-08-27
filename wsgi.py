@@ -193,3 +193,24 @@ def delete_flight_command(flight_id):
         print("Flight number "+str(flight_id)+" deleted!")
     else:
         print(response.json().get("message"))
+
+@cli_client.command("list planes",help="List all planes")
+@click.argument("page",default=1)
+@click.argument("per_page",default=3)
+@click.argument("model",default="")
+@click.argument("sort",default="-capacity")
+def list_planes_command(page,per_page,model,sort):
+    token = load_token()
+    response = requests.get(
+        "http://127.0.0.1:8080/api/planes",
+        headers={"Authorization":f"Bearer {token}"} if token else {},
+        params={
+            "page":page,
+            "per_page":per_page,
+            "model":model,
+            "sort":sort
+        })
+    if response.ok:
+        print(response.json().get("data"))   
+    else:
+        print("could not display!") 
