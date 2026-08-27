@@ -194,6 +194,8 @@ def delete_flight_command(flight_id):
     else:
         print(response.json().get("message"))
 
+""" Plane commands """
+
 @cli_client.command("list planes",help="List all planes")
 @click.argument("page",default=1)
 @click.argument("per_page",default=3)
@@ -262,5 +264,72 @@ def delete_plane_command(plane_id):
     )
     if response.ok:
         print("plane "+str(plane_id)+" was deleted!")
+    else:
+        print(response.json().get("message"))
+
+""" Pilot commands """
+@cli_client.command("list pilots",help="List all pilots")
+@click.argument("page",default=1)
+@click.argument("per_page",default=3)
+@click.argument("sort",default="name")
+def list_pilots_command(page,per_page,sort):
+    token = load_token()
+    response = requests.get(
+        "http://127.0.0.1:8080/api/pilots",
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        params={
+            "page":page,
+            "per_page":per_page,
+            "sort":sort
+        }
+    )
+    if response.ok:
+        print(response.json().get("data"))
+    else:
+        print("Could not display pilots!")
+
+@cli_client.command("create pilot",help="Create a pilot")
+@click.argument("name",default="Chris Gayle")
+def create_pilot_command(name):
+    token = load_token()
+    response = requests.post(
+        "http://127.0.0.1:8080/api/create_pilot",
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "name":name
+        }
+    )
+    if response.ok:
+        print("Pilot created!")
+    else:
+        print(response.json().get("message"))
+
+@cli_client.command("update pilot",help="Update a pilot")
+@click.argument("pilot_id",default=1)
+@click.argument("name",default="Henry James")
+def update_pilot_command(name,pilot_id):
+    token = load_token()
+    response = requests.put(
+        "http://127.0.0.1:8080/api/update_pilot/"+str(pilot_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "name":name
+        }
+    )
+    if response.ok:
+        print("Pilot "+str(pilot_id)+" updated!")
+    else:
+        print(response.json().get("message"))
+
+@cli_client.command("delete pilot",help="Delete a pilot")
+@click.argument("pilot_id",default=1)
+def delete_pilot_command(pilot_id):
+    token = load_token()
+    response = requests.delete(
+        "http://127.0.0.1:8080/api/delete_pilot/"+str(pilot_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}}
+    )
+    if response.ok:
+        print("Pilot "+str(pilot_id)+" deleted!")
     else:
         print(response.json().get("message"))
