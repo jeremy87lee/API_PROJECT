@@ -232,3 +232,22 @@ def create_plane_command(model,capacity):
         print("a "+model+" was created!")
     else:
         print(response.json().get("message"))
+
+@cli_client.command("update plane",help="Update a plane")
+@click.argument("plane_id",default=1)
+@click.argument("model",default="Boeing 747")
+@click.argument("capacity",default="360")
+def create_plane_command(model,capacity,plane_id):
+    token = load_token()
+    response = requests.put(
+        "http://127.0.0.1:8080/api/update_plane/"+str(plane_id),
+        headers={"Authorization":f"Bearer {token}" if token else {}},
+        json={
+            "model":model,
+            "capacity":capacity
+        }
+    )
+    if response.ok:
+        print("plane "+str(plane_id)+" was updated!")
+    else:
+        print(response.json().get("message"))
