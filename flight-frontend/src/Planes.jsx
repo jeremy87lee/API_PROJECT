@@ -35,6 +35,11 @@ function PlanesPage(){
         Navigate("/create-plane")
     }
 
+    const GoToUpdatePlanePage = (plane_id) => {
+        localStorage.setItem("plane_id",plane_id)
+        Navigate("/update-plane")
+    }
+
     useEffect(() => {
         fetch()
     },[sort,model,page])
@@ -57,7 +62,8 @@ function PlanesPage(){
             </div>
             <ul>
             {planes.map((plane) => (
-                <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}</li>
+                <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}
+                <button onClick={() => {GoToUpdatePlanePage(plane.id)}}>Update</button></li>
             ))}
             </ul>
             <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>
