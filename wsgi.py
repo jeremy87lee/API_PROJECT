@@ -375,7 +375,7 @@ def create_gate_command(flight_id,terminal):
         print(response.json().get("message"))
 
 @cli_client.command("update gate",help="Update a gate")
-@click.argument("gate_id",default=5)
+@click.argument("gate_id",default=4)
 @click.argument("flight_id",default=5)
 @click.argument("terminal",default="A1")
 def update_gate_command(flight_id,terminal,gate_id):
