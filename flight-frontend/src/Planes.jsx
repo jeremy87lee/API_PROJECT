@@ -40,6 +40,17 @@ function PlanesPage(){
         Navigate("/update-plane")
     }
 
+    const DeletePlane = async(plane_id) => {
+        const response = await apiFetch(`/delete_plane/${plane_id}`,{
+            method: "DELETE"})
+        if(response.ok){
+            alert(`plane ${plane_id} deleted!`)
+            fetch()
+        }else{
+            alert("Plane could not be deleted!")
+        }
+    }
+
     useEffect(() => {
         fetch()
     },[sort,model,page])
@@ -63,7 +74,8 @@ function PlanesPage(){
             <ul>
             {planes.map((plane) => (
                 <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}
-                <button onClick={() => {GoToUpdatePlanePage(plane.id)}}>Update</button></li>
+                <button onClick={() => {GoToUpdatePlanePage(plane.id)}}>Update</button>
+                <button onClick={() => {DeletePlane(plane.id)}}>Delete</button></li>
             ))}
             </ul>
             <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>
