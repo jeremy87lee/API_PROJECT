@@ -35,6 +35,19 @@ function GatesPage(){
         navigate("/update-gate")
     }
 
+    const DeleteGate = async(gateID) => {
+        const response = await apiFetch(`/delete_gate/${gateID}`,{
+            method:"DELETE"
+        })
+        if(response.ok){
+            alert(`Gate ${gateID} was deleted!`)
+            fetch()
+        }else{
+            const resp = await response.json()
+            alert(resp.message)
+        }
+    }
+
     useEffect(() => {
         fetch()
     },[page,sort]);
@@ -54,7 +67,8 @@ function GatesPage(){
             <ul>
                 {gates.map((gate) => (
                     <li>Gate number {gate.id} - Gate terminal {gate.terminal} - Gate flight {gate.flight} 
-                    {isAdmin && <button onClick={() => {GoToUpdatePage(gate.id)}}>Update</button>}</li>
+                    {isAdmin && <button onClick={() => {GoToUpdatePage(gate.id)}}>Update</button>}
+                    {isAdmin && <button onClick={() => {DeleteGate(gate.id)}}>Delete</button>}</li>
                 ))}
             </ul>
             <div>
