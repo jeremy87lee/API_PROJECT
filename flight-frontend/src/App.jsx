@@ -13,6 +13,7 @@ import CreateFlight from './create-flight'
 import UpdateFlight from './update-flight'
 import CreatePilot from './create-pilot'
 import UpdatePilot from './update-pilot'
+import CreatePlane from './create-plane'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,6 +30,7 @@ function App() {
         <Route path="/update-flight" element={<UpdateFlight />} />
         <Route path="/create-pilot" element={<CreatePilot />} />
         <Route path="/update-pilot" element={<UpdatePilot />} />
+        <Route path="/create-plane" element={< CreatePlane />} />
       </Routes>
     </BrowserRouter>
   )

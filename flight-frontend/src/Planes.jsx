@@ -31,6 +31,10 @@ function PlanesPage(){
         }
     }
 
+    const GoToCreatePlanePage = () => {
+        Navigate("/create-plane")
+    }
+
     useEffect(() => {
         fetch()
     },[sort,model,page])
@@ -56,6 +60,7 @@ function PlanesPage(){
                 <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}</li>
             ))}
             </ul>
+            <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>
             <div>
                 <button disabled = {page <= 1} onClick={() => {setPage(page-1)}} >Previous</button>
                 <spam>page {page} of {totalPage}</spam>
