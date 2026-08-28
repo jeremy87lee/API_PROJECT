@@ -67,6 +67,7 @@ def create_Plane(model, capacity):
     return new_plane
 
 def create_Gate(terminal, flight_id):
+    flight_id = int(flight_id)
     flight = Flight.query.get(flight_id)
     if not flight:
         print(f"Flight ID {flight_id} does not exist.")

@@ -11,6 +11,7 @@ function GatesPage(){
     const [perPage,setPerPage] = useState(3)
     const [totalPages,setTotalPages] = useState(1)
     const [sort,setSort] = useState("")
+    const isAdmin = localStorage.getItem("isAdmin")
 
     const fetch = async() => {
         const params = new URLSearchParams()
@@ -50,6 +51,9 @@ function GatesPage(){
                     <li>Gate number {gate.id} - Gate terminal {gate.terminal} - Gate flight {gate.flight} </li>
                 ))}
             </ul>
+            <div>
+                {isAdmin && <button onClick={() => {navigate("/create-gate")}}>Create Gate</button>}
+            </div>
             <div>
                 <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
                 <spam>page {page} of {totalPages}</spam>
