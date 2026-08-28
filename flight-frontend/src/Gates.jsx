@@ -11,7 +11,7 @@ function GatesPage(){
     const [perPage,setPerPage] = useState(3)
     const [totalPages,setTotalPages] = useState(1)
     const [sort,setSort] = useState("")
-    const isAdmin = localStorage.getItem("isAdmin")
+    const isAdmin = localStorage.getItem("isAdmin") == "true"
 
     const fetch = async() => {
         const params = new URLSearchParams()

@@ -11,6 +11,7 @@ function PlanesPage(){
     const [model,setModel] = useState("")
     const [totalPage,setTotalPage] = useState(1)
     const [sort,setSort] = useState("")
+    const isAdmin = localStorage.getItem("isAdmin") == "true"
 
     const fetch = async() => {
         const params = new URLSearchParams()
@@ -74,11 +75,11 @@ function PlanesPage(){
             <ul>
             {planes.map((plane) => (
                 <li>Plane number: {plane.id} - Plane model: {plane.model} - Plane capacity: {plane.capacity}
-                <button onClick={() => {GoToUpdatePlanePage(plane.id)}}>Update</button>
-                <button onClick={() => {DeletePlane(plane.id)}}>Delete</button></li>
+                { isAdmin && <button onClick={() => {GoToUpdatePlanePage(plane.id)}}>Update</button>}
+                {isAdmin && <button onClick={() => {DeletePlane(plane.id)}}>Delete</button>}</li>
             ))}
             </ul>
-            <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>
+            {isAdmin && <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>}
             <div>
                 <button disabled = {page <= 1} onClick={() => {setPage(page-1)}} >Previous</button>
                 <spam>page {page} of {totalPage}</spam>
