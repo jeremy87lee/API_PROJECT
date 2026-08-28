@@ -30,6 +30,11 @@ function GatesPage(){
         }
     }
 
+    const GoToUpdatePage = (gate_id) => {
+        localStorage.setItem("gateID",gate_id)
+        navigate("/update-gate")
+    }
+
     useEffect(() => {
         fetch()
     },[page,sort]);
@@ -48,7 +53,8 @@ function GatesPage(){
             </div>
             <ul>
                 {gates.map((gate) => (
-                    <li>Gate number {gate.id} - Gate terminal {gate.terminal} - Gate flight {gate.flight} </li>
+                    <li>Gate number {gate.id} - Gate terminal {gate.terminal} - Gate flight {gate.flight} 
+                    {isAdmin && <button onClick={() => {GoToUpdatePage(gate.id)}}>Update</button>}</li>
                 ))}
             </ul>
             <div>
