@@ -67,6 +67,7 @@ def create_Plane(model, capacity):
     return new_plane
 
 def create_Gate(terminal, flight_id):
+    flight_id = int(flight_id)
     flight = Flight.query.get(flight_id)
     if not flight:
         print(f"Flight ID {flight_id} does not exist.")
@@ -237,6 +238,7 @@ def get_all_pilots():
 
 #Code to update gate, plane, and pilot information in the database
 def update_gate(gate_id,terminal,flight_id):
+    flight_id = int(flight_id)
     gate = Gate.query.get(gate_id)
     flight = Flight.query.get(flight_id)
     
