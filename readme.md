@@ -1,3 +1,62 @@
+# DEPLOYED APP
+https://react-frontend-api-prooject.onrender.com/
+user login - username: bob, password: bobpass
+admin login - username: admin, password: adminpass
+
+## POSTMAN LINK
+https://best-team-ever-6394.postman.co/workspace/Jeremy-Lovell~30c224b7-9605-4f91-af1e-30da2f07cb2a/collection/42532979-d724725d-96a1-44de-8e68-efc65c8a5453?action=share&source=copy-link&creator=42532979
+
+## CLI COMMANDS
+List commands allow for the entrance of page, per page, and sorting variables. Some also allow for the entrance of a particular object feature for filtering.
+All commands include default values for input values, allowing for easier and faster cli usage.
+For sorting, you may enter a descending by entering the name of the feature with a "-" prefix. Example inputs: -capacity (desc), capacity (asc), "" (no sort)
+
+### User commands
+#### Create User
+flask cli_client "create user" "username" "password" "is_admin (True/False)"
+#### Login
+flask cli_client "login" "username" "password"
+
+### Flight commands
+#### list Flights
+flask cli_client "list flights" "page number" "per page amount" "destination" "sorting" 
+#### create Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
+flask cli_client "create flight" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
+#### update Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
+flask cli_client "update flight" "flight ID" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
+#### delete flight
+flask cli_client "delete flight" "flight ID"
+
+### Plane Commands
+#### list planes
+flask cli_client "list planes" "page number" "per page amount" "model" "sorting"
+#### create plane
+flask cli_client "create plane" "model" "capacity"
+#### update plane
+flask cli_client "update plane" "plane ID" "model" "capacity"
+#### delete plane
+flask cli_client "delete plane" "plane ID"
+
+### Pilot Commands
+#### list pilots
+flask cli_client "list pilots" "page number" "per page amount" "sorting"
+#### create pilot
+flask cli_client "create pilot" "name"
+#### update pilot
+flask cli_client "update pilot" "pilot ID" "name"
+#### delete pilot
+flask cli_client "delete pilot" "pilot ID"
+
+### Gate Commands
+#### list gates
+flask cli_client "list gates" "page number" "per page amount" "sorting"
+#### create gate - please note, flights already assigned to gates cannot be assigned to a newly created gate
+flask cli_client "create gate" "flight ID" "terminal"
+#### update plane - please note, flights already assigned to gates cannot be assigned to a newly updated gate
+flask cli_client "update gate" "gate ID" "flight ID" "terminal"
+#### delete plane
+flask cli_client "delete gate" "gate ID"
+
 ![Tests](https://github.com/uwidcit/flaskmvc/actions/workflows/dev.yml/badge.svg)
 
 # Flask MVC Template
@@ -187,56 +246,4 @@ If you are running into errors in gitpod when updateding your github actions fil
 
 If you are adding models you may need to migrate the database with the commands given in the previous database migration section. Alternateively you can delete you database file.
 
-## POSTMAN LINK
-https://best-team-ever-6394.postman.co/workspace/Jeremy-Lovell~30c224b7-9605-4f91-af1e-30da2f07cb2a/collection/42532979-d724725d-96a1-44de-8e68-efc65c8a5453?action=share&source=copy-link&creator=42532979
 
-## CLI COMMANDS
-List commands allow for the entrance of page, per page, and sorting variables. Some also allow for the entrance of a particular object feature for filtering.
-All commands include default values for input values, allowing for easier and faster cli usage.
-For sorting, you may enter a descending by entering the name of the feature with a "-" prefix. Example inputs: -capacity (desc), capacity (asc), "" (no sort)
-
-### User commands
-#### Create User
-flask cli_client "create user" "username" "password" "is_admin (True/False)"
-#### Login
-flask cli_client "login" "username" "password"
-
-### Flight commands
-#### list Flights
-flask cli_client "list flights" "page number" "per page amount" "destination" "sorting" 
-#### create Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
-flask cli_client "create flight" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
-#### update Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
-flask cli_client "update flight" "flight ID" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
-#### delete flight
-flask cli_client "delete flight" "flight ID"
-
-### Plane Commands
-#### list planes
-flask cli_client "list planes" "page number" "per page amount" "model" "sorting"
-#### create plane
-flask cli_client "create plane" "model" "capacity"
-#### update plane
-flask cli_client "update plane" "plane ID" "model" "capacity"
-#### delete plane
-flask cli_client "delete plane" "plane ID"
-
-### Pilot Commands
-#### list pilots
-flask cli_client "list pilots" "page number" "per page amount" "sorting"
-#### create pilot
-flask cli_client "create pilot" "name"
-#### update pilot
-flask cli_client "update pilot" "pilot ID" "name"
-#### delete pilot
-flask cli_client "delete pilot" "pilot ID"
-
-### Gate Commands
-#### list gates
-flask cli_client "list gates" "page number" "per page amount" "sorting"
-#### create gate - please note, flights already assigned to gates cannot be assigned to a newly created gate
-flask cli_client "create gate" "flight ID" "terminal"
-#### update plane - please note, flights already assigned to gates cannot be assigned to a newly updated gate
-flask cli_client "update gate" "gate ID" "flight ID" "terminal"
-#### delete plane
-flask cli_client "delete gate" "gate ID"
