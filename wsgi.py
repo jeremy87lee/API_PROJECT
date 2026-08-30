@@ -1,3 +1,5 @@
+from urllib import response
+
 import click, pytest, sys
 from flask.cli import with_appcontext, AppGroup
 
@@ -77,7 +79,7 @@ app.cli.add_command(cli_client)
 @click.argument("is_admin",default=False)
 def create_user_command(username,password,is_admin):
     response = requests.post(
-        "http://127.0.0.1:8080/api/create_user",
+        "https://api-project-chbu.onrender.com/api/create_user",
         json={"username": username,"password":password,"is_admin":is_admin}
     )
     print(response.json().get("message"))
@@ -87,7 +89,7 @@ def create_user_command(username,password,is_admin):
 @click.argument("password",default="adminpass")
 def login_command(username,password):
     response = requests.post(
-        "http://127.0.0.1:8080/api/login",
+        "https://api-project-chbu.onrender.com/api/login",
         json={"username":username,"password":password}
     )
     if(response.ok):
@@ -120,7 +122,7 @@ def list_flights(page,per_page,destination,sort):
     token = load_token()
     headers = {"Authorization": f"Bearer {token}"} if token else {}
     response = requests.get(
-        "http://127.0.0.1:8080/api/flights",
+        "https://api-project-chbu.onrender.com/api/flights",
         params={"page":page,
                 "per_page":per_page,
                 "destination":destination,
@@ -138,7 +140,7 @@ def list_flights(page,per_page,destination,sort):
 def create_flight_command(plane_id,pilot_id,departure_destination,destination,departure_time,arrival_time):
     token = load_token()
     response = requests.post(
-        "http://127.0.0.1:8080/api/create_flight",
+        "https://api-project-chbu.onrender.com/api/create_flight",
         json= {
             "plane_id":plane_id,
             "pilot_id":pilot_id,
@@ -165,7 +167,7 @@ def create_flight_command(plane_id,pilot_id,departure_destination,destination,de
 def update_flight_command(plane_id,pilot_id,departure_destination,destination,departure_time,arrival_time,flight_id):
     token = load_token()
     response = requests.put(
-        "http://127.0.0.1:8080/api/update_flight/"+str(flight_id),  
+        "https://api-project-chbu.onrender.com/api/update_flight/"+str(flight_id),  
         headers={"Authorization": f"Bearer {token}"} if token else {},
         json={
             "plane_id":plane_id,
@@ -186,7 +188,7 @@ def update_flight_command(plane_id,pilot_id,departure_destination,destination,de
 def delete_flight_command(flight_id):
     token = load_token()
     response = requests.delete(
-        "http://127.0.0.1:8080/api/delete_flight/"+str(flight_id),
+        "https://api-project-chbu.onrender.com/api/delete_flight/"+str(flight_id),
         headers={"Authorization": f"Bearer {token}"} if token else {}
     )
     if response.ok:
@@ -204,7 +206,7 @@ def delete_flight_command(flight_id):
 def list_planes_command(page,per_page,model,sort):
     token = load_token()
     response = requests.get(
-        "http://127.0.0.1:8080/api/planes",
+        "https://api-project-chbu.onrender.com/api/planes",
         headers={"Authorization":f"Bearer {token}"} if token else {},
         params={
             "page":page,
@@ -223,7 +225,7 @@ def list_planes_command(page,per_page,model,sort):
 def create_plane_command(model,capacity):
     token = load_token()
     response = requests.post(
-        "http://127.0.0.1:8080/api/create_plane",
+        "https://api-project-chbu.onrender.com/api/create_plane",
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "model":model,
@@ -242,7 +244,7 @@ def create_plane_command(model,capacity):
 def update_plane_command(model,capacity,plane_id):
     token = load_token()
     response = requests.put(
-        "http://127.0.0.1:8080/api/update_plane/"+str(plane_id),
+        "https://api-project-chbu.onrender.com/api/update_plane/"+str(plane_id),
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "model":model,
@@ -259,7 +261,7 @@ def update_plane_command(model,capacity,plane_id):
 def delete_plane_command(plane_id):
     token = load_token()
     response = requests.delete(
-        "http://127.0.0.1:8080/api/delete_plane/"+str(plane_id),
+        "https://api-project-chbu.onrender.com/api/delete_plane/"+str(plane_id),
         headers={"Authorization":f"Bearer {token}" if token else {}}
     )
     if response.ok:
@@ -275,7 +277,7 @@ def delete_plane_command(plane_id):
 def list_pilots_command(page,per_page,sort):
     token = load_token()
     response = requests.get(
-        "http://127.0.0.1:8080/api/pilots",
+        "https://api-project-chbu.onrender.com/api/pilots",
         headers={"Authorization":f"Bearer {token}" if token else {}},
         params={
             "page":page,
@@ -293,7 +295,7 @@ def list_pilots_command(page,per_page,sort):
 def create_pilot_command(name):
     token = load_token()
     response = requests.post(
-        "http://127.0.0.1:8080/api/create_pilot",
+        "https://api-project-chbu.onrender.com/api/create_pilot",
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "name":name
@@ -310,7 +312,7 @@ def create_pilot_command(name):
 def update_pilot_command(name,pilot_id):
     token = load_token()
     response = requests.put(
-        "http://127.0.0.1:8080/api/update_pilot/"+str(pilot_id),
+        "https://api-project-chbu.onrender.com/api/update_pilot/"+str(pilot_id),
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "name":name
@@ -326,7 +328,7 @@ def update_pilot_command(name,pilot_id):
 def delete_pilot_command(pilot_id):
     token = load_token()
     response = requests.delete(
-        "http://127.0.0.1:8080/api/delete_pilot/"+str(pilot_id),
+        "https://api-project-chbu.onrender.com/api/delete_pilot/"+str(pilot_id),
         headers={"Authorization":f"Bearer {token}" if token else {}}
     )
     if response.ok:
@@ -343,7 +345,7 @@ def delete_pilot_command(pilot_id):
 def list_gates_command(page,per_page,sort):
     token = load_token()
     response = requests.get(
-        "http://127.0.0.1:8080/api/gates",
+        "https://api-project-chbu.onrender.com/api/gates",
         headers={"Authorization":f"Bearer {token}" if token else{}},
         params={
             "page":page,
@@ -362,7 +364,7 @@ def list_gates_command(page,per_page,sort):
 def create_gate_command(flight_id,terminal):
     token = load_token()
     response = requests.post(
-        "http://127.0.0.1:8080/api/create_gate",
+        "https://api-project-chbu.onrender.com/api/create_gate",
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "terminal":terminal,
@@ -381,7 +383,7 @@ def create_gate_command(flight_id,terminal):
 def update_gate_command(flight_id,terminal,gate_id):
     token = load_token()
     response = requests.put(
-        "http://127.0.0.1:8080/api/update_gate/"+str(gate_id),
+        "https://api-project-chbu.onrender.com/api/update_gate/"+str(gate_id),
         headers={"Authorization":f"Bearer {token}" if token else {}},
         json={
             "terminal":terminal,
@@ -398,7 +400,7 @@ def update_gate_command(flight_id,terminal,gate_id):
 def delete_gate_command(gate_id):
     token = load_token()
     response = requests.delete(
-        "http://127.0.0.1:8080/api/delete_gate/"+str(gate_id),
+        "https://api-project-chbu.onrender.com/api/delete_gate/"+str(gate_id),
         headers={"Authorization":f"Bearer {token}" if token else {}}
     )
     if response.ok:
