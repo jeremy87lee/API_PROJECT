@@ -204,9 +204,9 @@ flask cli_client "login" "username" "password"
 ### Flight commands
 #### list Flights
 flask cli_client "list flights" "page number" "per page amount" "destination" "sorting" 
-#### create Flight
+#### create Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
 flask cli_client "create flight" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
-#### update Flight 
+#### update Flight - please note, a plane or pilot cannot be assined to a flight with a flight time that clashes with a pre-existing flight
 flask cli_client "update flight" "flight ID" "plane ID" "pilot ID" "departure time" "arrival time" "departure destination" "destination"
 #### delete flight
 flask cli_client "delete flight" "flight ID"
@@ -234,9 +234,9 @@ flask cli_client "delete pilot" "pilot ID"
 ### Gate Commands
 #### list gates
 flask cli_client "list gates" "page number" "per page amount" "sorting"
-#### create gate
+#### create gate - please note, flights already assigned to gates cannot be assigned to a newly created gate
 flask cli_client "create gate" "flight ID" "terminal"
-#### update plane
+#### update plane - please note, flights already assigned to gates cannot be assigned to a newly updated gate
 flask cli_client "update gate" "gate ID" "flight ID" "terminal"
 #### delete plane
 flask cli_client "delete gate" "gate ID"
