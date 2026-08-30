@@ -76,11 +76,20 @@ app.cli.add_command(cli_client)
 @cli_client.command("create user",help="Command to create a new user")
 @click.argument("username",default="jeremy")
 @click.argument("password",default="jeremypass")
-@click.argument("is_admin",default=False)
-def create_user_command(username,password,is_admin):
+def create_user_command(username,password):
     response = requests.post(
         "https://api-project-chbu.onrender.com/api/create_user",
-        json={"username": username,"password":password,"is_admin":is_admin}
+        json={"username": username,"password":password}
+    )
+    print(response.json().get("message"))
+
+@cli_client.command("create admin",help="Command to create a new admin user")
+@click.argument("username",default="admin")
+@click.argument("password",default="adminpass")
+def create_admin_command(username,password):
+    response = requests.post(
+        "https://api-project-chbu.onrender.com/api/create_admin",
+        json={"username": username,"password":password}
     )
     print(response.json().get("message"))
 

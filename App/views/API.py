@@ -40,7 +40,7 @@ def get_users():
 @api_views.route('/create_user',methods=['POST'])
 def create_general_user():
     data = request.json
-    if data.get("username") is None or data.get("password") is None or data.get("is_admin") is None:
+    if data.get("username") is None or data.get("password") is None:
         return jsonify({"message":f"Missing credentials!"}),400
     users = get_all_users()
     for u in users:
@@ -50,6 +50,21 @@ def create_general_user():
     if user:
         return jsonify({"message":f"User created!"}),201
     return jsonify({"message":f"User could not be created!"}),400
+
+
+@api_views.route('/create_admin',methods=['POST'])
+def create_admin_user():
+    data = request.json
+    if data.get("username") is None or data.get("password") is None:
+        return jsonify({"message":f"Missing credentials!"}),400
+    users = get_all_users()
+    for u in users:
+        if u.username == data.get("username"):
+            return jsonify({"message":f"Username already taken!"}),409
+    user = create_user(data.get("username"),data.get("password"),is_admin=True)
+    if user:
+        return jsonify({"message":f"Admin user created!"}),201
+    return jsonify({"message":f"Admin user could not be created!"}),400
 
 'Flight API endpoints'
 @api_views.route('/flights',methods=['GET'])
