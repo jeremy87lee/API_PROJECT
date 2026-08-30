@@ -4,7 +4,7 @@ function navBar(){
     const navigate = useNavigate()
     
     return (
-        <div>
+        <div class="nav">
             <button onClick={()=> {
                 navigate("/flights")
             }}>Flights</button>

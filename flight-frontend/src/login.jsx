@@ -29,14 +29,12 @@ function LoginPage(){
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} class="login-form">
                 <label>Username</label>
                 <input value={username} onChange={(e) => setUsername(e.target.value)}/>
-
                 <label>Password</label>
                 <input value={password} onChange={(e) => setPassword(e.target.value)}/>
-
-                {error && <p style={{color:"red"}}>{error}</p>}
+                {error && <p>{error}</p>}
                 <button type="submit">Login</button>
             </form>
         </div>

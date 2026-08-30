@@ -57,6 +57,7 @@ function GatesPage(){
     return(
         <div>
             <NavBar />
+            <h1>Gates</h1>
             <div>
                 <select value={sort} onChange={(e) => {setPage(1);setSort(e.target.value)}}>
                     <option value="">No Sort</option>
@@ -76,7 +77,7 @@ function GatesPage(){
             </div>
             <div>
                 <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
-                <spam>page {page} of {totalPages}</spam>
+                <span>page {page} of {totalPages}</span>
                 <button disabled={page >= totalPages} onClick={() => {setPage(page+1)}}>Next</button>
             </div>
         </div>

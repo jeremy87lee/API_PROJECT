@@ -78,7 +78,7 @@ function PilotsPage(){
             </div>
             <div>
                 <button disabled={page <= 1} onClick={() => {setPage(page-1)}}>Previous</button>
-                <spam>page {page} of {totalPages}</spam>
+                <span>page {page} of {totalPages}</span>
                 <button disabled= {page >= totalPages} onClick={() => {setPage(page+1)}}>Next</button>
             </div>
         </div>

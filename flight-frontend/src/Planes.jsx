@@ -82,7 +82,7 @@ function PlanesPage(){
             {isAdmin && <button onClick={() => {GoToCreatePlanePage()}}>Create Plane</button>}
             <div>
                 <button disabled = {page <= 1} onClick={() => {setPage(page-1)}} >Previous</button>
-                <spam>page {page} of {totalPage}</spam>
+                <span>page {page} of {totalPage}</span>
                 <button disabled = {page >= totalPage} onClick={() => {setPage(page+1)}}>Next</button>
             </div>
         </div>
