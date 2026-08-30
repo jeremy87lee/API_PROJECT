@@ -3,7 +3,11 @@ https://react-frontend-api-prooject.onrender.com/
 user login - username: bob, password: bobpass
 admin login - username: admin, password: adminpass
 
---NOTE: Render's Web appication firewall (WAF) blocks requests made to the create user endpoint, resulting in a 403 forbidden error. This is due to the presence of the is_admin variable, and render is liekly blocking it to prevent self-assignment of admin privelges. This highlights an area for improvement in the project, where systems shouldn't allow unauthenticated self-registration to set admin status directly.
+## TEST COMMANDS
+### Unit tests
+flask test user "unit"
+### Integration tests
+flask test user "int"
 ## POSTMAN LINK
 https://best-team-ever-6394.postman.co/workspace/Jeremy-Lovell~30c224b7-9605-4f91-af1e-30da2f07cb2a/collection/42532979-d724725d-96a1-44de-8e68-efc65c8a5453?action=share&source=copy-link&creator=42532979
 
